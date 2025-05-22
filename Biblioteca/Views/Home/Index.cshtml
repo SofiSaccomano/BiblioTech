@@ -13,6 +13,9 @@
     </form>
 </div>
 
+
+<!-- ... (código existente acima) ... -->
+
 <div id="divLancamentos">
     <div class="parallax pt-4 d-flex justify-content-evenly flex-wrap">
         @foreach (var livro in Model)
@@ -20,8 +23,21 @@
             <div class="card text-center mt-2 mb-3" style="width: 16rem;">
                 <div class="w-100 text-center mt-3">
                     <img src="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Action("BuscarCapa", "Livros", new { id = livro.LivroId }))"
-                         class="card-img-top img-fluid"
-                         alt="Capa do Livro" style="height: 200px; object-fit: cover;" />
+                         class="card-img-top img-fluid livro-capa"
+                         alt="Capa do Livro"
+                         style="height: 200px; object-fit: cover; cursor:pointer;"
+                         data-titulo="@livro.Titulo"
+                         data-autor="@livro.Autor"
+                         data-genero="@livro.Genero?.Nome"
+                         data-editora="@livro.Editora"
+                         data-ano="@livro.DataPublicacao"
+                         data-sinopse="@livro.Descricao"
+                         data-numeroPaginas="@livro.NumeroPaginas"
+                         data-isbn="@livro.ISBN10"
+                         data-isbn13="@livro.ISBN13"
+                         data-capa="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Action("BuscarCapa", "Livros", new { id = livro.LivroId }))"
+                         data-livroid="@livro.LivroId" />
+
                 </div>
                 <div class="card-body">
                     <h4 class="card-title">@livro.Titulo</h4>
@@ -40,6 +56,72 @@
         }
     </div>
 </div>
+
+<!-- Modal Bootstrap -->
+<div class="modal fade" id="livroModal" tabindex="-1" aria-labelledby="livroModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="livroModalLabel">Detalhes do Livro</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-3 text-center">
+                        <img id="modalCapa" src="" alt="Capa do Livro" class="img-fluid mb-3" style="max-height: 220px;" />
+                    </div>
+                    <div class="col-md-9 text-start">
+                        <h4 id="modalTitulo"></h4>
+                        <p><strong>Autor:</strong> <span id="modalAutor"></span></p>
+                        <p><strong>Gênero:</strong> <span id="modalGenero"></span></p>
+                        <p><strong>Sinopse:</strong> <span id="modalSinopse"></span></p>
+                        <p><strong>Numero Páginas:</strong> <span id="modalNumeroPaginas"></span></p>
+                        <p><strong>Editora:</strong> <span id="modalEditora"></span></p>
+                        <p><strong>Data Publicação:</strong> <span id="modalAno"></span></p>
+                        <p><strong>ISBN:</strong> <span id="modalISBN"></span></p>
+                        <p><strong>ISBN13:</strong> <span id="modalISBN13"></span></p>
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <form id="modalReservaForm" asp-controller="Reservas" asp-action="Create" method="post" class="d-inline">
+                    <input type="hidden" name="LivroId" id="modalLivroId" value="" />
+                    <button type="submit" class="btn btn-dark">
+                        Reservar
+                    </button>
+                </form>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var modal = new bootstrap.Modal(document.getElementById('livroModal'));
+            document.querySelectorAll('.livro-capa').forEach(function (img) {
+                img.addEventListener('click', function () {
+                    document.getElementById('modalCapa').src = img.getAttribute('data-capa');
+                    document.getElementById('modalTitulo').textContent = img.getAttribute('data-titulo');
+                    document.getElementById('modalAutor').textContent = img.getAttribute('data-autor');
+                    document.getElementById('modalGenero').textContent = img.getAttribute('data-genero') || '';
+                    document.getElementById('modalNumeroPaginas').textContent = img.getAttribute('data-numeroPaginas') || '';
+                    document.getElementById('modalEditora').textContent = img.getAttribute('data-editora') || '';
+                    document.getElementById('modalAno').textContent = img.getAttribute('data-ano') || '';
+                    document.getElementById('modalISBN').textContent = img.getAttribute('data-isbn') || '';
+                    document.getElementById('modalISBN13').textContent = img.getAttribute('data-isbn13') || '';
+                    document.getElementById('modalSinopse').textContent = img.getAttribute('data-sinopse') || '';
+                    document.getElementById('modalLivroId').value = img.getAttribute('data-livroid');
+                    modal.show();
+                });
+            });
+        });
+    </script>
+}
+<!-- ... (restante do código) ... -->
+
 
 
 
@@ -63,7 +145,7 @@
                         <p class="text-center">
                             <form asp-controller="Reservas" asp-action="Create" method="post" class="d-inline">
                                 <input type="hidden" name="LivroId" value="@livro.LivroId" />
-                                <button type="submit" class="btn btn-dark p-3 m-0">
+                                <button type="submit" class="btn btn-dark p-1 m-0 align-baseline">
                                     Reservar
                                 </button>
                             </form>
