@@ -331,8 +331,5 @@ namespace Biblioteca.Controllers
             return PartialView("_UltimosLancamentos", livros);
         }
 
-
-
-
     }
 }
