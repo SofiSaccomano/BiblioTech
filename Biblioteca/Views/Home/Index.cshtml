@@ -3,7 +3,7 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div id="divPesquisa" class="bg-black pt-4 pb-4 text-light">
+<div id="divPesquisa" class="pt-4 pb-4 text-black" style="background-color: #EFE6DD;">
     <p class="fs-4 text-center">Encontre seu livro, pelo nome, autor ou editora.</p>
     <form asp-controller="Livros" asp-action="Search" method="get" class="input-group form-busca">
         <input type="text" name="searchTerm" class="form-control fs-4" placeholder="Pesquisar na BiblioTech" aria-describedby="btnPesquisar" />
