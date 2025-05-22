@@ -34,7 +34,7 @@ namespace Biblioteca.Controllers
             var reservasQuery = _context.Reservas
                 .Include(r => r.Livro)
                 .Include(r => r.Usuario)
-                .Where(r => r.Usuario.AppUserId.ToString() == userId);
+                .Where(r => r.Usuario.AppUserId.ToString() == userId && !r.Cancelada); // <-- Adicione este filtro
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -43,15 +43,15 @@ namespace Biblioteca.Controllers
                     r.Usuario.NomeCompleto.Contains(searchTerm));
             }
 
-            // Ordena: pendentes primeiro, depois retiradas, ambos por data mais antiga
             var reservas = await reservasQuery
-                .OrderBy(r => r.LivroRetirado) // false (pendente) vem antes de true (retirada)
+                .OrderBy(r => r.LivroRetirado)
                 .ThenBy(r => r.DataReserva)
                 .ToListAsync();
 
             ViewBag.SearchTerm = searchTerm;
             return View(reservas);
         }
+
 
         // GET: Reservas/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -311,7 +311,8 @@ namespace Biblioteca.Controllers
             return livros;
         }
 
-        [HttpGet]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Cancelar(int id)
         {
             var reserva = await _context.Reservas.FindAsync(id);
@@ -320,19 +321,20 @@ namespace Biblioteca.Controllers
                 return NotFound();
             }
 
-            // Procurar o livro associado à reserva
             var livro = await _context.Livros.FindAsync(reserva.LivroId);
-
-            livro.Quantidade += 1; // Aumenta a quantidade do livro
+            if (livro != null)
+            {
+                livro.Quantidade += 1;
+            }
 
             reserva.Cancelada = true;
             _context.Update(reserva);
             await _context.SaveChangesAsync();
 
             TempData["SuccessMessage"] = "Reserva Cancelada com Sucesso!";
-
-            // Redireciona para a action Retiradas do MovimentacoesController
-            return RedirectToAction("Retiradas", "Movimentacoes");
+            return RedirectToAction(nameof(Index));
         }
+
+
     }
 }
