@@ -24,13 +24,13 @@ body {
 
 .parallax {
     background-image: url('../img/biblioteca.jpeg');
-    height: 550px;
-    max-height: 550px;
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    /* Remova height e max-height! */
 }
+
 
 header {
     box-shadow: rgba(0,0,0,.3) 0px 5px;
@@ -53,25 +53,37 @@ header {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
+#divLancamentos {
+    margin-bottom: 3rem;
+}
+
 
 #divLancamentos, #divTop5, #divAvalicao {
-    max-height: 520px;
-    height: 520px;
+    /*    max-height: 520px;
+    height: 520px;*/
 }
 
     #divLancamentos .card, #divTop5 .card, #divAvalicao .card {
-        margin: 0 32px 0 32px;
-        width: 18rem;
+        max-width: 18rem;
         text-align: center;
         box-shadow: rgba(0,0,0,.4) 10px 10px;
-        height: 400px;
-        max-height: 400px;
     }
+
 
         #divLancamentos .card img, #divTop5 .card img, #divAvalicao .card img {
             height: 200px;
-            width: 150px;
+            width: 100%;
+            object-fit: cover;
+            max-width: 150px;
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
         }
+
+
+    #divTop5 .card {
+        max-width: 18rem;
+    }
 
 
 .text-shadow-white {

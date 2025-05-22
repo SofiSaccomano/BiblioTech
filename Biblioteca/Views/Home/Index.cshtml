@@ -13,44 +13,12 @@
     </form>
 </div>
 
-<div id="divLancamentos">
-    <div class="parallax pt-4 d-flex justify-content-evenly flex-wrap">
+<div id="divLancamentos" class="container my-4">
+    <div class="parallax pt-4 row g-4 justify-content-center">
         @foreach (var livro in Model)
         {
-            <div class="card text-center mt-2 mb-3" style="width: 16rem;">
-                <div class="w-100 text-center mt-3">
-                    <img src="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Action("BuscarCapa", "Livros", new { id = livro.LivroId }))"
-                         class="card-img-top img-fluid"
-                         alt="Capa do Livro" style="height: 200px; object-fit: cover;" />
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title">@livro.Titulo</h4>
-                    <h5 class="lead">@livro.Autor</h5>
-                    <p class="mb-1"><span class="badge bg-secondary">@livro.Genero?.Nome</span></p>
-                    <p class="text-center">
-                        <form asp-controller="Reservas" asp-action="Create" method="post" class="d-inline">
-                            <input type="hidden" name="LivroId" value="@livro.LivroId" />
-                            <button type="submit" class="btn btn-dark p-3 m-0">
-                                Reservar
-                            </button>
-                        </form>
-                    </p>
-                </div>
-            </div>
-        }
-    </div>
-</div>
-
-
-
-<div class="m-0 p-0">
-    <h2 class="text-center text-light bg-dark m-0 pt-4">TOP 5 - Livros Mais Reservados</h2>
-    <div id="divTop5" class="bg-dark m-0 pt-4 d-flex justify-content-evenly flex-wrap">
-        @if (ViewBag.LivrosMaisReservados != null)
-        {
-            foreach (var livro in (IEnumerable<Biblioteca.Models.Livro>)ViewBag.LivrosMaisReservados)
-            {
-                <div class="card text-center mt-2 mb-3" style="width: 16rem;">
+            <div class="col-6 col-sm-6 col-md-4 col-lg-3 d-flex">
+                <div class="card text-center mt-2 mb-3 mx-auto" style="width: 16rem;">
                     <div class="w-100 text-center mt-3">
                         <img src="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Action("BuscarCapa", "Livros", new { id = livro.LivroId }))"
                              class="card-img-top img-fluid"
@@ -70,14 +38,51 @@
                         </p>
                     </div>
                 </div>
-            }
-        }
-        else
-        {
-            <span class="text-light">Nenhum livro reservado ainda.</span>
+            </div>
         }
     </div>
 </div>
+
+<div class="m-0 p-0">
+    <h2 class="text-center text-light bg-dark m-0 pt-4">TOP 5 - Livros Mais Reservados</h2>
+    <div id="divTop5" class="container bg-dark m-0 pt-4">
+        <div class="row g-4 justify-content-center">
+            @if (ViewBag.LivrosMaisReservados != null)
+            {
+                foreach (var livro in (IEnumerable<Biblioteca.Models.Livro>)ViewBag.LivrosMaisReservados)
+                {
+                    <div class="col-6 col-sm-6 col-md-4 col-lg-3 d-flex">
+                        <div class="card text-center mt-2 mb-3 mx-auto" style="width: 16rem;">
+                            <div class="w-100 text-center mt-3">
+                                <img src="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Action("BuscarCapa", "Livros", new { id = livro.LivroId }))"
+                                     class="card-img-top img-fluid"
+                                     alt="Capa do Livro" style="height: 200px; object-fit: cover;" />
+                            </div>
+                            <div class="card-body">
+                                <h4 class="card-title">@livro.Titulo</h4>
+                                <h5 class="lead">@livro.Autor</h5>
+                                <p class="mb-1"><span class="badge bg-secondary">@livro.Genero?.Nome</span></p>
+                                <p class="text-center">
+                                    <form asp-controller="Reservas" asp-action="Create" method="post" class="d-inline">
+                                        <input type="hidden" name="LivroId" value="@livro.LivroId" />
+                                        <button type="submit" class="btn btn-dark p-3 m-0">
+                                            Reservar
+                                        </button>
+                                    </form>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <span class="text-light">Nenhum livro reservado ainda.</span>
+            }
+        </div>
+    </div>
+</div>
+
 
 <!--
 <div id="divAvalicao">
