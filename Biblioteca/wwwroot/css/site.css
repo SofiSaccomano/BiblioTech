@@ -239,3 +239,8 @@ header {
         font-size: 14px;
         padding: 12px;
     }
+
+.card-title {
+    height: 51px !important;
+    max-height: 51px !important;
+}
