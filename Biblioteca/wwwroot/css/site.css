@@ -18,12 +18,13 @@ html {
 }
 
 body {
+    background-color: #EFE6DD;
     margin: 0;
     padding: 0;
 }
 
 .parallax {
-    background-image: url('../img/biblioteca.jpeg');
+    background-image: url('../img/flores.jpg');
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
@@ -32,8 +33,11 @@ body {
 }
 
 
+
+
 header {
     box-shadow: rgba(0,0,0,.3) 0px 5px;
+    background-color: #600000;
 }
 
 #divPesquisa {
@@ -243,4 +247,8 @@ header {
 .card-title {
     height: 51px !important;
     max-height: 51px !important;
+}
+
+#corLetra {
+    color: #4B2E2E;
 }
