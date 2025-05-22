@@ -9,25 +9,25 @@
     <h1 class="text-center text-light mb-3">Gêneros</h1>
 
     <div class="row gap-3 mb-4">
-        <div class="col-3">
-            <a asp-action="Create" class="btn btn-outline-light w-100">
+        <div class="col-12">
+            <a asp-action="Create" class="btn btn-lg btn-light w-100">
                 <i class="bi bi-plus-circle"></i> Adicionar
             </a>
         </div>
     </div>
 
     <table class="table table-dark text-light table-striped">
-    <thead>
-        <tr>
+        <thead>
+            <tr>
                 <th>Nome</th>
                 <th class="text-end">Ações</th>
-        </tr>
-    </thead>
+            </tr>
+        </thead>
 
-    <tbody>
+        <tbody>
             @foreach (var item in Model)
             {
-        <tr>
+                <tr>
                     <td>@item.Nome</td>
                     <td class="text-end">
                         <a asp-action="Edit" asp-route-id="@item.GeneroId" class="text-light text-decoration-none me-2">
@@ -36,9 +36,9 @@
                         <a asp-action="Delete" asp-route-id="@item.GeneroId" class="text-light text-decoration-none">
                             <i class="bi bi-trash3"></i>
                         </a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>

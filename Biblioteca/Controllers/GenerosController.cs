@@ -20,47 +20,10 @@ namespace Biblioteca.Controllers
         }
 
         // GET: Generos
-        public async Task<IActionResult> Index(
-    string? searchTerm,
-    string? sortOrder,
-    int page = 1)
+        public async Task<IActionResult> Index()
         {
-            int pageSize = 5;
-
-            var generosQuery = _context.Generos.AsQueryable();
-
-            // Filtro de busca
-            if (!string.IsNullOrWhiteSpace(searchTerm))
-            {
-                generosQuery = generosQuery.Where(g =>
-                    g.Nome.Contains(searchTerm));
-            }
-
-            // Ordenação
-            ViewData["CurrentSort"] = sortOrder;
-            ViewData["NameSortParm"] = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
-
-            generosQuery = sortOrder switch
-            {
-                "name_desc" => generosQuery.OrderByDescending(g => g.Nome),
-                _ => generosQuery.OrderBy(g => g.Nome),
-            };
-
-            // Paginação
-            var totalItems = await generosQuery.CountAsync();
-            var generos = await generosQuery
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToListAsync();
-
-            // Enviar dados para a View
-            ViewData["CurrentFilter"] = searchTerm;
-            ViewData["CurrentPage"] = page;
-            ViewData["TotalPages"] = (int)Math.Ceiling(totalItems / (double)pageSize);
-
-            return View(generos);
+            return View(await _context.Generos.ToListAsync());
         }
-
 
         // GET: Generos/Details/5
         public async Task<IActionResult> Details(int? id)
