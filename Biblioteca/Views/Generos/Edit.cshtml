@@ -25,7 +25,7 @@
                 <div class="row gap-1 mb-3">
                     <div class="col">
                         <div class="form-group d-flex justify-content-between pt-4">
-                            <button asp-action="Index" class="btn btn-sm btn-outline-light fs-6" style="background-color:#52130C"><i class="bi bi-arrow-clockwise"></i> Voltar</button>
+                            <button asp-action="Index" class="btn btn-sm btn-outline-light fs-6" style="background-color:#52130C"><i class="bi bi-arrow-left"></i> Voltar</button>
                             <button type="submit" id="btnSalvar" class="btn btn-sm btn-outline-light fs-6  " style="background-color:#52130C">
                                 <i class="bi bi-floppy"></i> Salvar
                             </button>
@@ -35,10 +35,10 @@
             </form>
         </div>
     </div>
+</div>
 
-
-    @section Scripts {
-        @{
-            await Html.RenderPartialAsync("_ValidationScriptsPartial");
-        }
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
     }
