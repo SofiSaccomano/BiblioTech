@@ -373,5 +373,40 @@ namespace Biblioteca.Controllers
             ViewBag.TabAtiva = "devolucao";
             return View("Retiradas", reservas);
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Cancelar(int id)
+        {
+            // Busca a reserva pelo id
+            var reserva = await _context.Reservas
+                .FirstOrDefaultAsync(r => r.ReservaId == id);
+
+            if (reserva != null)
+            {
+                // Remove a movimentação associada, se existir
+                var movimentacao = await _context.Movimentacoes
+                    .FirstOrDefaultAsync(m => m.LivroId == reserva.LivroId && m.UsuarioId == reserva.UsuarioId && !m.LivroDevolvido);
+
+                if (movimentacao != null)
+                {
+                    _context.Movimentacoes.Remove(movimentacao);
+                }
+
+                // Remove a reserva
+                _context.Reservas.Remove(reserva);
+
+                await _context.SaveChangesAsync();
+                TempData["SuccessMessage"] = "Reserva e retirada canceladas com sucesso!";
+            }
+            else
+            {
+                TempData["SuccessMessage"] = "Reserva não encontrada.";
+            }
+
+            return RedirectToAction("Retiradas");
+        }
+
+
     }
 }
