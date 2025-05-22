@@ -238,20 +238,19 @@ namespace Biblioteca.Controllers
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var livro = await _context.Livros
-                .Include(l => l.Genero)
+                .Include(l => l.Genero) // Inclua outras propriedades de navegação se necessário
                 .FirstOrDefaultAsync(m => m.LivroId == id);
-            if (livro == null)
-            {
-                return NotFound();
-            }
 
+            if (livro == null)
+                return NotFound();
+
+            // Aqui, livro.UrlCapa deve estar preenchido se existir no banco
             return View(livro);
         }
+
 
         // POST: Livros/Delete/5
         [HttpPost, ActionName("Delete")]
