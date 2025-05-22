@@ -14,61 +14,46 @@
                 </div>
 
                 <div class="card-body">
-                    <h3 class="text-center  mb-4">Tem certeza que deseja <strong>excluir</strong> este livro?</h3>
+                    <h3 class="text-center mb-4">Tem certeza que deseja <strong>excluir</strong> este livro?</h3>
 
                     <dl class="row">
                         <dt class="col-sm-4">Título</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Titulo)</dd>
+                        <dd class="col-sm-8 mb-3">@Html.DisplayFor(model => model.Titulo)</dd>
 
                         <dt class="col-sm-4">Autor</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Autor)</dd>
+                        <dd class="col-sm-8 mb-3">@Html.DisplayFor(model => model.Autor)</dd>
 
                         <dt class="col-sm-4">Descrição</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Descricao)</dd>
+                        <dd class="col-sm-8 mb-3">@Html.DisplayFor(model => model.Descricao)</dd>
 
                         <dt class="col-sm-4">Editora</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Editora)</dd>
+                        <dd class="col-sm-8 mb-3">@Html.DisplayFor(model => model.Editora)</dd>
 
                         <dt class="col-sm-4">Publicação</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.DataPublicacao)</dd>
+                        <dd class="col-sm-8 mb-3">@Html.DisplayFor(model => model.DataPublicacao)</dd>
 
                         <dt class="col-sm-4">Páginas</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.NumeroPaginas)</dd>
+                        <dd class="col-sm-8 mb-3">@Html.DisplayFor(model => model.NumeroPaginas)</dd>
 
                         <dt class="col-sm-4">Quantidade</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Quantidade)</dd>
+                        <dd class="col-sm-8 mb-3">@Html.DisplayFor(model => model.Quantidade)</dd>
 
-                        <dt class="col-sm-2">Capa do Livro</dt>
-                        <dd class="col-sm-10">
-                            @if (!string.IsNullOrEmpty(Model.UrlCapa))
-                            {
-                                <img src="@Model.UrlCapa"
-                                     alt="Capa do Livro"
-                                     class="img-fluid rounded shadow"
-                                     style="max-height: 100px;" />
-                            }
-                            else
-                            {
-                                <img src="~/img/sem-imagem.jpg"
-                                     alt="Sem Capa"
-                                     class="img-fluid rounded shadow"
-                                     style="max-height: 100px;" />
-                            }
-                        </dd>
+                        <dt class="col-sm-4">Capa (URL)</dt>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.UrlCapa)</dd>
 
                         <dt class="col-sm-4">ISBN-10</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.ISBN10)</dd>
+                        <dd class="col-sm-8 mb-3">@Html.DisplayFor(model => model.ISBN10)</dd>
 
                         <dt class="col-sm-4">ISBN-13</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.ISBN13)</dd>
+                        <dd class="col-sm-8 mb-3">@Html.DisplayFor(model => model.ISBN13)</dd>
 
                         <dt class="col-sm-4">Gênero</dt>
-                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Genero.GeneroId)</dd>
+                        <dd class="col-sm-8">@Html.DisplayFor(model => model.Genero.Nome)</dd>
                     </dl>
                 </div>
 
                 <div class="card-footer bg-transparent d-flex justify-content-between">
-                    <form asp-action="Delete" class="mb-0">
+                    <form asp-action="Delete" method="post" class="mb-0">
                         <input type="hidden" asp-for="LivroId" />
                         <button type="submit" class="btn btn-lg text-light" style="background-color:#52130C">
                             <i class="bi bi-trash3"></i> Excluir
@@ -79,7 +64,6 @@
                     </a>
                 </div>
             </div>
-
         </div>
     </div>
 </div>
