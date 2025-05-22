@@ -14,7 +14,15 @@
             <div class="alert alert-success">@TempData["SuccessMessage"]</div>
         }
 
+        <div class="row align-items-start gap-3 mb-4">
+            <!-- Botão Adicionar -->
+            <div class="col-auto d-flex align-items-stretch">
+                <a asp-action="Create" class="btn btn-outline-light px-4 d-flex align-items-center" style="height: 54px;">
+                    <i class="bi bi-plus-circle"></i> Adicionar
+                </a>
+            </div>
 
+<<<<<<< HEAD
         <div id="divLocalizarReserva" class="mb-4">
             <form asp-action="Index" method="get" class="mb-3">
                 <div class="input-group">
@@ -24,7 +32,22 @@
                     </button>
                 </div>
             </form>
+=======
+            <!-- Campo de Busca -->
+            <div id="divLocalizarReserva" class="col">
+                <form asp-action="Index" method="get">
+                    <div class="input-group">
+                        <input type="text" name="searchTerm" value="@Context.Request.Query["searchTerm"]" class="form-control" placeholder="Buscar reserva..." />
+                        <button type="submit" class="btn btn-outline-light">
+                            <i class="bi bi-search"></i> Buscar
+                        </button>
+                    </div>
+                </form>
+            </div>
+>>>>>>> origin/Vitoria
         </div>
+
+
         @Html.AntiForgeryToken()
         <table class="table table-dark table-striped mt-3">
             <thead>
