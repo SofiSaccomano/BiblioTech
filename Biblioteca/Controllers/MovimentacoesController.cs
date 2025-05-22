@@ -274,6 +274,7 @@ namespace Biblioteca.Controllers
         {
             var movimentacao = await _context.Movimentacoes
                 .Include(m => m.Livro)
+                .Include(m => m.Usuario)
                 .FirstOrDefaultAsync(m => m.MovimentacaoId == id);
 
             if (movimentacao == null || movimentacao.LivroDevolvido)
@@ -309,10 +310,19 @@ namespace Biblioteca.Controllers
                 _context.Livros.Update(movimentacao.Livro);
             }
 
+            // Remove a reserva correspondente
+            var reserva = await _context.Reservas
+                .FirstOrDefaultAsync(r => r.LivroId == movimentacao.LivroId && r.UsuarioId == movimentacao.UsuarioId && !r.Cancelada);
+
+            if (reserva != null)
+            {
+                _context.Reservas.Remove(reserva);
+            }
+
             _context.Movimentacoes.Update(movimentacao);
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Livro devolvido com sucesso!";
+            TempData["SuccessMessage"] = "Livro devolvido e reserva removida com sucesso!";
 
             // Carrega as listas para a view
             var reservasAtivas = await _context.Reservas
@@ -331,6 +341,7 @@ namespace Biblioteca.Controllers
             ViewBag.TabAtiva = "devolucao";
             return View("Retiradas", reservasAtivas);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> BuscaRetirada(string searchTerm)
