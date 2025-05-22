@@ -249,3 +249,15 @@ header {
 #corLetra {
     color: #4B2E2E;
 }
+
+#listaGeneros {
+    font-size: 16px;
+    border-radius: 16px;
+    box-shadow: rgba(0,0,0,.4) 12px 12px;
+    padding-top: 1.5rem; /* Reduza o valor conforme desejar */
+    padding-bottom: 2rem; /* Mantém o espaçamento inferior confortável */
+}
+
+    #listaGeneros h1 {
+        margin-top: 0;
+    }
