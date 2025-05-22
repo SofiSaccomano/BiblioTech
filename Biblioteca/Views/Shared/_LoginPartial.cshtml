@@ -14,8 +14,8 @@
         .Select(u => u.UsuarioId)
         .FirstOrDefault();
 
-    <div class="d-flex align-items-center">
-        <a class="text-light nav-link me-4"
+    <div class="d-flex flex-column flex-sm-row align-items-center gap-2 gap-sm-3 w-100">
+        <a class="text-light nav-link fs-5 w-80 w-sm-auto text-center text-sm-start"
            asp-controller="Usuarios"
            asp-action="Edit"
            asp-route-id="@usuarioId"
@@ -23,14 +23,15 @@
             Olá @User.Identity?.Name!
         </a>
         <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button type="submit" class="btn btn-outline-light me-4 fs-5">Sair</button>
+            <button type="submit" class="btn btn-outline-light fs-5">Sair</button>
         </form>
     </div>
+
 }
 else
 {
-    <div class="d-flex align-items-center">
-        <a class="text-light nav-link me-4" asp-area="Identity" asp-page="/Account/Register">Cadastre-se</a>
-        <a class="me-4 fs-5 btn btn-outline-light" asp-area="Identity" asp-page="/Account/Login">Entrar</a>
+    <div class="d-flex flex-column flex-sm-row align-items-center gap-2 gap-sm-3 w-100">
+        <a class="text-light nav-link fs-5 w-100 w-sm-auto text-center text-sm-start" asp-area="Identity" asp-page="/Account/Register">Cadastre-se</a>
+        <a class="fs-5 btn btn-outline-light w-100 w-sm-auto" asp-area="Identity" asp-page="/Account/Login">Entrar</a>
     </div>
 }
