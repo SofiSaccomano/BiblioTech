@@ -8,11 +8,24 @@
 
     <h1 class="text-center text-light mb-3">Gêneros</h1>
 
-    <div class="row gap-3 mb-4">
-        <div class="col-12">
-            <a asp-action="Create" class="btn btn-lg btn-light w-100">
+    <div class="row align-items-start gap-3 mb-4">
+        <!-- Botão Adicionar -->
+        <div class="col-auto d-flex align-items-stretch">
+            <a asp-action="Create" class="btn btn-outline-light px-4 d-flex align-items-center" style="height: 54px;">
                 <i class="bi bi-plus-circle"></i> Adicionar
             </a>
+        </div>
+
+        <!-- Campo de Busca -->
+        <div id="divLocalizarReserva" class="col">
+            <form asp-action="Index" method="get">
+                <div class="input-group">
+                    <input type="text" name="searchTerm" value="@Context.Request.Query["searchTerm"]" class="form-control" placeholder="Buscar reserva..." style="height: 54px;" />
+                    <button type="submit" class="btn btn-outline-light">
+                        <i class="bi bi-search"></i> Buscar
+                    </button>
+                </div>
+            </form>
         </div>
     </div>
 
