@@ -1,35 +1,44 @@
 ﻿@model IEnumerable<Biblioteca.Models.Genero>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Gêneros";
 }
 
-<h1>Index</h1>
+<div id="listaGeneros" class="container bg-black text-light p-5">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+    <h1 class="text-center text-light mb-3">Gêneros</h1>
+
+    <div class="row gap-3 mb-4">
+        <div class="col-3">
+            <a asp-action="Create" class="btn btn-outline-light w-100">
+                <i class="bi bi-plus-circle"></i> Adicionar
+            </a>
+        </div>
+    </div>
+
+    <table class="table table-dark text-light table-striped">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nome)
-            </th>
-            <th></th>
+                <th>Nome</th>
+                <th class="text-end">Ações</th>
         </tr>
     </thead>
+
     <tbody>
-@foreach (var item in Model) {
+            @foreach (var item in Model)
+            {
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nome)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.GeneroId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.GeneroId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.GeneroId">Delete</a>
+                    <td>@item.Nome</td>
+                    <td class="text-end">
+                        <a asp-action="Edit" asp-route-id="@item.GeneroId" class="text-light text-decoration-none me-2">
+                            <i class="bi bi-pencil-square"></i>
+                        </a>
+                        <a asp-action="Delete" asp-route-id="@item.GeneroId" class="text-light text-decoration-none">
+                            <i class="bi bi-trash3"></i>
+                        </a>
             </td>
         </tr>
 }
     </tbody>
 </table>
+</div>
