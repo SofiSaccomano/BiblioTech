@@ -315,25 +315,34 @@ namespace Biblioteca.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Cancelar(int id)
         {
-            var reserva = await _context.Reservas.FindAsync(id);
+            // Busca a reserva pelo id
+            var reserva = await _context.Reservas
+                .FirstOrDefaultAsync(r => r.ReservaId == id);
+
             if (reserva == null)
             {
-                return NotFound();
+                TempData["SuccessMessage"] = "Reserva não encontrada.";
+                return RedirectToAction("Index");
             }
 
-            var livro = await _context.Livros.FindAsync(reserva.LivroId);
-            if (livro != null)
+            // Remove a movimentação associada, se existir
+            var movimentacao = await _context.Movimentacoes
+                .FirstOrDefaultAsync(m => m.LivroId == reserva.LivroId && m.UsuarioId == reserva.UsuarioId && !m.LivroDevolvido);
+
+            if (movimentacao != null)
             {
-                livro.Quantidade += 1;
+                _context.Movimentacoes.Remove(movimentacao);
             }
 
-            reserva.Cancelada = true;
-            _context.Update(reserva);
+            // Remove a reserva
+            _context.Reservas.Remove(reserva);
+
             await _context.SaveChangesAsync();
 
-            TempData["SuccessMessage"] = "Reserva Cancelada com Sucesso!";
-            return RedirectToAction(nameof(Index));
+            TempData["SuccessMessage"] = "Reserva cancelada e retirada removida com sucesso!";
+            return RedirectToAction("Index");
         }
+
 
 
     }
