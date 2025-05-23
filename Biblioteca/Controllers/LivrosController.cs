@@ -136,43 +136,27 @@ namespace Biblioteca.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("LivroId,Titulo,Autor,Descricao,Editora,DataPublicacao,NumeroPaginas,Quantidade,UrlCapa,ISBN10,ISBN13,GeneroId")] Livro livro, IFormFile UrlCapa)
+        public async Task<IActionResult> Create([Bind("Titulo,Autor,Descricao,Editora,DataPublicacao,NumeroPaginas,Quantidade,ISBN10,ISBN13,GeneroId")] Livro livro, IFormFile UrlCapa)
         {
             if (ModelState.IsValid)
             {
                 if (UrlCapa != null && UrlCapa.Length > 0)
                 {
-                    // Definir o caminho para salvar a imagem
-                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "Resources", "Books");
-
-                    // Extrai a extensão do arquivo enviado (ex: .jpg, .png)
+                    // Caminho para salvar a imagem
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Resources", "Books");
                     var fileExtension = Path.GetExtension(UrlCapa.FileName);
-
-                    // Usa apenas o ID do livro + extensão
                     var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
                     var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
-
-                    // Se já existir, adiciona um GUID ao nome
-                    if (System.IO.File.Exists(filePath))
-                    {
-                        uniqueFileName = $"{Guid.NewGuid()}_{fileExtension}";
-                        filePath = Path.Combine(uploadsFolder, uniqueFileName);
-                    }
-
-                    // Criar a pasta se não existir
                     if (!Directory.Exists(uploadsFolder))
-                    {
                         Directory.CreateDirectory(uploadsFolder);
-                    }
 
-                    // Salvar o arquivo no diretório
                     using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
                         await UrlCapa.CopyToAsync(fileStream);
                     }
 
-                    // Atualizar o campo UrlCapa com o caminho relativo
+                    // Salva o caminho relativo
                     livro.UrlCapa = Path.Combine("Resources", "Books", uniqueFileName).Replace("\\", "/");
                 }
 
@@ -206,32 +190,62 @@ namespace Biblioteca.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("LivroId,Titulo,Autor,Descricao,Editora,DataPublicacao,NumeroPaginas,Quantidade,UrlCapa,ISBN10,ISBN13,GeneroId")] Livro livro)
+        public async Task<IActionResult> Edit(int id, [Bind("LivroId,Titulo,Autor,Descricao,Editora,DataPublicacao,NumeroPaginas,Quantidade,UrlCapa,ISBN10,ISBN13,GeneroId")] Livro livro, IFormFile? UrlCapa)
         {
             if (id != livro.LivroId)
-            {
                 return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
                 try
                 {
-                    _context.Update(livro);
+                    var livroOriginal = await _context.Livros.FindAsync(id);
+                    if (livroOriginal == null)
+                        return NotFound();
+
+                    // Atualiza os campos editáveis
+                    livroOriginal.Titulo = livro.Titulo;
+                    livroOriginal.Autor = livro.Autor;
+                    livroOriginal.Descricao = livro.Descricao;
+                    livroOriginal.Editora = livro.Editora;
+                    livroOriginal.DataPublicacao = livro.DataPublicacao;
+                    livroOriginal.NumeroPaginas = livro.NumeroPaginas;
+                    livroOriginal.Quantidade = livro.Quantidade;
+                    livroOriginal.ISBN10 = livro.ISBN10;
+                    livroOriginal.ISBN13 = livro.ISBN13;
+                    livroOriginal.GeneroId = livro.GeneroId;
+
+                    // Substitui a capa se o usuário enviou uma nova
+                    if (UrlCapa != null && UrlCapa.Length > 0)
+                    {
+                        var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "Resources", "Books");
+                        var fileExtension = Path.GetExtension(UrlCapa.FileName);
+                        var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+                        var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                        if (!Directory.Exists(uploadsFolder))
+                            Directory.CreateDirectory(uploadsFolder);
+
+                        using (var fileStream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await UrlCapa.CopyToAsync(fileStream);
+                        }
+
+                        livroOriginal.UrlCapa = Path.Combine("Resources", "Books", uniqueFileName).Replace("\\", "/");
+                    }
+
+
+                    _context.Update(livroOriginal);
                     await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(Index));
                 }
                 catch (DbUpdateConcurrencyException)
                 {
                     if (!LivroExists(livro.LivroId))
-                    {
                         return NotFound();
-                    }
                     else
-                    {
                         throw;
-                    }
                 }
-                return RedirectToAction(nameof(Index));
             }
             ViewData["GeneroId"] = new SelectList(_context.Generos.OrderBy(g => g.Nome), "GeneroId", "Nome", livro.GeneroId);
             return View(livro);
