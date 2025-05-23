@@ -20,10 +20,19 @@ namespace Biblioteca.Controllers
         }
 
         // GET: Generos
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string? searchTerm)
         {
-            return View(await _context.Generos.ToListAsync());
+            var generos = from g in _context.Generos
+                          select g;
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                generos = generos.Where(g => g.Nome.Contains(searchTerm));
+            }
+
+            return View(await generos.ToListAsync());
         }
+
 
         // GET: Generos/Details/5
         public async Task<IActionResult> Details(int? id)

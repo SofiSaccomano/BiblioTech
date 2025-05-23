@@ -52,8 +52,8 @@
                     <form asp-action="BuscaRetirada" method="get" class="mb-3">
                         <input type="hidden" name="tab" value="devolucao" />
                         <div class="input-group">
-                            <input type="text" name="searchTerm" class="form-control" placeholder="Localizar Retirada.." />
-                            <button type="submit" class="btn btn-outline-light"><i class="bi bi-search"></i> Localizar</button>
+                            <input type="text" name="searchTerm" class="form-control" placeholder="Buscar retirada..." />
+                            <button type="submit" class="btn btn-outline-light text-light" style="background-color:#52130C"><i class="bi bi-search"></i> Buscar</button>
                         </div>
                     </form>
                 </div>
@@ -79,7 +79,7 @@
                                         <td>@item.Usuario?.NomeCompleto</td>
                                         <td>@item.Livro?.Titulo</td>
                                         <td>
-                                            <a asp-controller="Movimentacoes" asp-action="Retirar" asp-route-id="@item.ReservaId" class="btn btn-light text-decoration-none">
+                                            <a asp-controller="Movimentacoes" asp-action="Retirar" asp-route-id="@item.ReservaId" class="btn btn-light text-light text-decoration-none" style="background-color:#52130C">
                                                 Retirar
                                             </a>
                                         </td>
@@ -87,7 +87,7 @@
                                             <form asp-controller="Movimentacoes" asp-action="Cancelar" method="post" style="display:inline;">
                                                 <input type="hidden" name="id" value="@item.ReservaId" />
                                                 @Html.AntiForgeryToken()
-                                                <button type="submit" class="btn btn-light text-decoration-none w-75" style="padding: 0.375rem 0.75rem;">
+                                                <button type="submit" class="btn btn-light text-decoration-none text-light w-75" style="padding: 0.375rem 0.75rem; background-color:#52130C">
                                                     Cancelar
                                                 </button>
                                             </form>
@@ -117,8 +117,8 @@
                     <!-- Campo de Busca -->
                     <form asp-action="BuscaRetirada" method="get" class="mb-3">
                         <div class="input-group">
-                            <input type="text" name="searchTerm" class="form-control" placeholder="Localizar Retirada.." />
-                            <button type="submit" class="btn btn-outline-light"><i class="bi bi-search"></i> Localizar</button>
+                            <input type="text" name="searchTerm" class="form-control" placeholder="Buscar retirada..." />
+                            <button type="submit" class="btn btn-outline-light text-light" style="background-color:#52130C"><i class="bi bi-search"></i> Buscar</button>
                         </div>
                     </form>
                 </div>
@@ -145,7 +145,7 @@
                                         <td>@mov.Livro?.Titulo</td>
                                         <td>@mov.DataDevolucao?.ToString("dd/MM/yyyy")</td>
                                         <td>
-                                            <a asp-controller="Movimentacoes" asp-action="Devolver" asp-route-id="@mov.MovimentacaoId" class="btn btn-light text-decoration-none">
+                                            <a asp-controller="Movimentacoes" asp-action="Devolver" asp-route-id="@mov.MovimentacaoId" class="btn btn-light text-light text-decoration-none" style="background-color:#52130C">
                                                 Devolver
                                             </a>
                                         </td>

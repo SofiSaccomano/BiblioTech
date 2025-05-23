@@ -76,7 +76,7 @@ namespace Biblioteca.Controllers
         // GET: Reservas/Create
         public IActionResult Create()
         {
-            ViewData["LivroId"] = new SelectList(_context.Livros, "LivroId", "LivroId");
+            ViewData["LivroId"] = new SelectList(_context.Livros, "LivroId", "Titulo");
             ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId");
             return View();
         }
