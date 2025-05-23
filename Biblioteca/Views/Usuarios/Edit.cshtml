@@ -3,10 +3,11 @@
     ViewData["Title"] = "Cadastro de Usuário";
 }
 
-<div id="divUsuario" class="container bg-black text-light mt-5 fs-5">
+<div id="divUsuario" class="container tabela-reservas text-light mt-5 fs-5">
     <h4 class="text-center fs-3">Confirme seus Dados</h4>
     <hr />
-    <form asp-action="Edit">
+    <form asp-action="Edit" enctype="multipart/form-data" id="formUsuarioEdit">
+
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
         <input type="hidden" asp-for="UsuarioId" />
         <div class="row gap-3 mb-3 mt-2">
@@ -58,9 +59,9 @@
         <div class="row gap-3 mb-3">
             <div class="col">
                 <div class="form-group d-flex justify-content-between pt-4">
-                    <button asp-action="Index" class="btn btn-sm btn-outline-light fs-6" style="background-color:#52130C"><i class="bi bi-arrow-clockwise"></i> Voltar</button>
-                    <button type="submit" id="btnSalvar" class="btn btn-sm btn-outline-light fs-6" style="background-color:#52130C">
-                        <i class="bi bi-floppy"></i>  Salvar
+                    <button asp-action="Index" class="btn btn-sm text-light fs-6" style="background-color:#52130C"><i class="bi bi-arrow-clockwise"></i> Voltar</button>
+                    <button type="submit" id="btnSalvar" class="btn btn-sm text-light fs-6" style="background-color:#52130C">
+                        <i class="bi bi-floppy"></i> Salvar
                     </button>
                 </div>
             </div>
@@ -72,13 +73,35 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-
     <script>
         $(document).ready(function () {
-            // Aplica a máscara ao campo CPF
+            // Máscaras
             $('input[name="CPF"]').mask('000.000.000-00');
-            // Aplica a máscara ao campo Celular
             $('input[name="Celular"]').mask('(00) 00000-0000');
+
+            // Salva os dados do formulário antes do reload
+            $('#formUsuarioEdit').on('submit', function () {
+                var formData = {};
+                $('#formUsuarioEdit :input').each(function () {
+                    if (this.name && (this.type !== 'file')) {
+                        formData[this.name] = $(this).val();
+                    }
+                });
+                localStorage.setItem('usuarioFormData', JSON.stringify(formData));
+            });
+
+            // Restaura os dados do formulário ao carregar a página
+            var savedData = localStorage.getItem('usuarioFormData');
+            if (savedData) {
+                savedData = JSON.parse(savedData);
+                Object.keys(savedData).forEach(function (key) {
+                    var $field = $('[name="' + key + '"]');
+                    if ($field.length) {
+                        $field.val(savedData[key]);
+                    }
+                });
+                localStorage.removeItem('usuarioFormData');
+            }
         });
     </script>
 }

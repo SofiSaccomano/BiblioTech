@@ -130,7 +130,10 @@ namespace Biblioteca.Controllers
             {
                 var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
                 if (userId == null)
+                {
                     return NotFound();
+                }
+
 
                 var existingUser = await _context.Usuarios
                     .FirstOrDefaultAsync(u => u.AppUserId == Guid.Parse(userId));
@@ -187,50 +190,73 @@ namespace Biblioteca.Controllers
 
         // GET: Usuarios/Edit/5
         [Authorize]
-        public async Task<IActionResult> Edit()
+        public async Task<IActionResult> Edit(int id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.AppUserId.ToString() == userId);
+
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.UsuarioId == id);
             if (usuario == null)
                 return NotFound();
-
             return View(usuario);
         }
+
 
         // POST: Usuarios/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("UsuarioId,NomeCompleto,CPF,Celular,DataNascimento,UrlFoto,AppUserId")] Usuario usuario)
+        public async Task<IActionResult> Edit(int id, [Bind("UsuarioId,NomeCompleto,CPF,Celular,DataNascimento,AppUserId")] Usuario usuario, IFormFile? UrlFoto)
         {
-            if (id != usuario.UsuarioId)
-            {
-                return NotFound();
-            }
+
 
             if (ModelState.IsValid)
             {
-                try
+                var usuarioOriginal = await _context.Usuarios.FindAsync(id);
+                if (usuarioOriginal == null)
+                    return NotFound();
+
+                usuarioOriginal.NomeCompleto = usuario.NomeCompleto;
+                usuarioOriginal.CPF = usuario.CPF;
+                usuarioOriginal.Celular = usuario.Celular;
+                usuarioOriginal.DataNascimento = usuario.DataNascimento;
+                usuarioOriginal.AppUserId = usuario.AppUserId;
+
+                // Salva nova foto se enviada
+                if (UrlFoto != null && UrlFoto.Length > 0)
                 {
-                    _context.Update(usuario);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!UsuarioExists(usuario.UsuarioId))
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "img", "usuarios");
+                    var fileExtension = Path.GetExtension(UrlFoto.FileName);
+                    var uniqueFileName = $"{Guid.NewGuid()}{fileExtension}";
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    if (!Directory.Exists(uploadsFolder))
+                        Directory.CreateDirectory(uploadsFolder);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
                     {
-                        return NotFound();
+                        await UrlFoto.CopyToAsync(fileStream);
                     }
-                    else
+
+                    // Remove foto antiga se existir
+                    if (!string.IsNullOrEmpty(usuarioOriginal.UrlFoto))
                     {
-                        throw;
+                        var oldPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", usuarioOriginal.UrlFoto.TrimStart('/').Replace("/", Path.DirectorySeparatorChar.ToString()));
+                        if (System.IO.File.Exists(oldPath))
+                            System.IO.File.Delete(oldPath);
                     }
+
+                    usuarioOriginal.UrlFoto = $"/img/usuarios/{uniqueFileName}";
                 }
+
+                _context.Update(usuarioOriginal);
+                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(usuario);
         }
+
+
+
 
         // GET: Usuarios/Delete/5
         public async Task<IActionResult> Delete(int? id)
@@ -314,43 +340,43 @@ namespace Biblioteca.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UsuarioId,NomeCompleto,CPF,Celular,DataNascimento,UrlFoto")] Usuario usuario, string username, string senha)
-        {
-            if (ModelState.IsValid)
-            {
-                // Monta o e-mail padrão
-                var email = $"{username}@aluno.com";
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Create([Bind("UsuarioId,NomeCompleto,CPF,Celular,DataNascimento,UrlFoto")] Usuario usuario, string username, string senha)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        // Monta o e-mail padrão
+        //        var email = $"{username}@aluno.com";
 
-                // Cria o IdentityUser
-                var identityUser = new IdentityUser { UserName = email, Email = email };
-                var result = await _userManager.CreateAsync(identityUser, senha);
+        //        // Cria o IdentityUser
+        //        var identityUser = new IdentityUser { UserName = email, Email = email };
+        //        var result = await _userManager.CreateAsync(identityUser, senha);
 
-                if (result.Succeeded)
-                {
-                    // Adiciona à role "Aluno"
-                    await _userManager.AddToRoleAsync(identityUser, "Aluno");
+        //        if (result.Succeeded)
+        //        {
+        //            // Adiciona à role "Aluno"
+        //            await _userManager.AddToRoleAsync(identityUser, "Aluno");
 
-                    // Relaciona IdentityUser ao Usuario
-                    usuario.AppUserId = Guid.Parse(identityUser.Id);
-                    usuario.IdentityUser = identityUser;
+        //            // Relaciona IdentityUser ao Usuario
+        //            usuario.AppUserId = Guid.Parse(identityUser.Id);
+        //            usuario.IdentityUser = identityUser;
 
-                    _context.Add(usuario);
-                    await _context.SaveChangesAsync();
+        //            _context.Add(usuario);
+        //            await _context.SaveChangesAsync();
 
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
-                }
-            }
-            return View(usuario);
-        }
+        //            return RedirectToAction("Index", "Home");
+        //        }
+        //        else
+        //        {
+        //            foreach (var error in result.Errors)
+        //            {
+        //                ModelState.AddModelError("", error.Description);
+        //            }
+        //        }
+        //    }
+        //    return View(usuario);
+        //}
 
     }
 }
