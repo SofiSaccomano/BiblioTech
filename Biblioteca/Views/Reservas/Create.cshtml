@@ -1,51 +1,89 @@
 ﻿@model Biblioteca.Models.Reserva
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Cadastro de Reservas";
 }
 
-<h1>Create</h1>
-
-<h4>Reserva</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="DataReserva" class="control-label"></label>
-                <input asp-for="DataReserva" class="form-control" />
-                <span asp-validation-for="DataReserva" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="UsuarioId" class="control-label"></label>
-                <select asp-for="UsuarioId" class="form-control" asp-items="ViewBag.UsuarioId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="LivroId" class="control-label"></label>
-                <select asp-for="LivroId" class="form-control" asp-items="ViewBag.LivroId"></select>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="LivroRetirado" /> @Html.DisplayNameFor(model => model.LivroRetirado)
-                </label>
-            </div>
-            <div class="form-group form-check">
-                <label class="form-check-label">
-                    <input class="form-check-input" asp-for="Cancelada" /> @Html.DisplayNameFor(model => model.Cancelada)
-                </label>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="col-1 col-md-2 col-lg-2"></div>
+
+    <div class="col-10 col-md-8 col-lg-8">
+        <div class="bg-black text-light m-lg-5 p-5 rounded">
+
+            <h1 class="text-center mb-3">Cadastro de Reservas</h1>
+
+            <form asp-action="Create" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                <div class="row gap-3 mb-3">
+                    <div class="col-12 col-md">
+                        <div class="form-group">
+                            <label asp-for="DataReserva" class="control-label"></label>
+                            <input asp-for="DataReserva" class="form-control" type="date" />
+                            <span asp-validation-for="DataReserva" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row gap-3 mb-3">
+                    <div class="col-12 col-md">
+                        <div class="form-group">
+                            <label asp-for="UsuarioId" class="control-label"></label>
+                            <select asp-for="UsuarioId" class="form-control" asp-items="ViewBag.UsuarioId">
+                                <option value="">Selecione um usuário</option>
+                            </select>
+                            <span asp-validation-for="UsuarioId" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md">
+                        <div class="form-group">
+                            <label asp-for="LivroId" class="control-label"></label>
+                            <select asp-for="LivroId" class="form-control" asp-items="ViewBag.LivroId">
+                                <option value="">Selecione um livro</option>
+                            </select>
+                            <span asp-validation-for="LivroId" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row gap-3 mb-3">
+                    <div class="col-12 col-md">
+                        <div class="form-check">
+                            <input class="form-check-input" asp-for="LivroRetirado" />
+                            <label class="form-check-label" asp-for="LivroRetirado">
+                                @Html.DisplayNameFor(model => model.LivroRetirado)
+                            </label>
+                        </div>
+                    </div>
+                    <div class="col-12 col-md">
+                        <div class="form-check">
+                            <input class="form-check-input" asp-for="Cancelada" />
+                            <label class="form-check-label" asp-for="Cancelada">
+                                @Html.DisplayNameFor(model => model.Cancelada)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-4">
+                    <div class="col d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-outline-light fs-5">
+                            <i class="bi bi-arrow-left-circle"></i> Voltar
+                        </a>
+                        <button type="submit" class="btn btn-light fs-5">
+                            <i class="bi bi-floppy"></i> Salvar
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
+
+    <div class="col-1 col-md-2 col-lg-2"></div>
 </div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
+<!-- Validação -->
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
