@@ -31,9 +31,6 @@ body {
     background-size: cover;
 }
 
-
-
-
 header {
     box-shadow: rgba(0,0,0,.3) 0px 5px;
     background-color: #600000;
@@ -244,10 +241,34 @@ header {
         padding: 12px;
     }
 
-.card-title {
-    height: 51px !important;
-    max-height: 51px !important;
+.rating {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+    display: inline-flex;
 }
+
+    .rating input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 2em;
+        height: 2em;
+        margin: 0;
+    }
+
+    .rating label {
+        color: #ccc;
+        font-size: 2em;
+        cursor: pointer;
+        transition: color 0.2s;
+        position: relative;
+        z-index: 1;
+    }
+
+        .rating input[type="radio"]:checked ~ label,
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: gold;
+        }
 
 #corLetra {
     color: #4B2E2E;

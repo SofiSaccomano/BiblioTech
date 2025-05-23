@@ -11,38 +11,47 @@
     <h4>Avaliacao</h4>
     <hr />
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nota)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nota)
+        <dt class="col-sm-2">Nota</dt>
+        <dd class="col-sm-10">
+            @for (int i = 1; i <= 5; i++)
+            {
+                if (i <= Model.Nota)
+                {
+                    <span style="color: gold; font-size: 1.5em;">&#9733;</span>
+                }
+                else
+                {
+                    <span style="color: #444; font-size: 1.5em;">&#9733;</span>
+                }
+            }
         </dd>
-        <dt class = "col-sm-2">
+
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Comentario)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Comentario)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.DataAvaliacao)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.DataAvaliacao)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Livro)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Livro.LivroId)
         </dd>
-        <dt class = "col-sm-2">
+        <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Usuario)
         </dt>
-        <dd class = "col-sm-10">
+        <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Usuario.UsuarioId)
         </dd>
     </dl>
-    
+
     <form asp-action="Delete">
         <input type="hidden" asp-for="AvaliacaoId" />
         <input type="submit" value="Delete" class="btn btn-danger" /> |
