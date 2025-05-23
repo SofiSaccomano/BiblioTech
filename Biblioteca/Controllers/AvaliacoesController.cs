@@ -120,8 +120,8 @@ namespace Biblioteca.Controllers
             {
                 return NotFound();
             }
-            ViewData["LivroId"] = new SelectList(_context.Livros, "LivroId", "LivroId", avaliacao.LivroId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId", avaliacao.UsuarioId);
+            ViewData["LivroId"] = new SelectList(_context.Livros, "LivroId", "Titulo", avaliacao.LivroId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "NomeCompleto", avaliacao.UsuarioId);
             return View(avaliacao);
         }
 
