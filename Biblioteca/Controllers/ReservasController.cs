@@ -231,6 +231,13 @@ namespace Biblioteca.Controllers
                 {
                     _context.Update(reserva);
                     await _context.SaveChangesAsync();
+
+                    // Se o livro foi retirado, redireciona para a página de devolução
+                    if (reserva.LivroRetirado)
+                    {
+                        // Supondo que Devolver está em MovimentacoesController e espera o id da reserva
+                        return RedirectToAction("Devolver", "Movimentacoes", new { reservaId = reserva.ReservaId });
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -249,6 +256,7 @@ namespace Biblioteca.Controllers
             ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId", reserva.UsuarioId);
             return View(reserva);
         }
+
 
         // GET: Reservas/Delete/5
         public async Task<IActionResult> Delete(int? id)
