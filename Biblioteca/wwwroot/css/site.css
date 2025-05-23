@@ -196,8 +196,9 @@ header {
         padding: 12px;
     }
 
-.nav-tabs .nav-link:not(.active) {
-    color: #f8f9fa !important;
+.nav-tabs .nav-link,
+.nav-tabs .nav-link.active {
+    color: #000 !important;
 }
 
 #divMovimentos {
