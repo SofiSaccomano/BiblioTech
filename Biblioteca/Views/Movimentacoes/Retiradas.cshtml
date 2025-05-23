@@ -8,11 +8,11 @@
     <div class="col-1 col-md-2 col-lg-2">
     </div>
 
-    <div id="divMovimentos" class="col-10 col-md-8 col-lg-8 bg-black text-light m-lg-5 mb-3 p-5">
+    <div id="divMovimentos" class="col-10 col-md-8 col-lg-8 tabela-reservas m-lg-5 mb-3 p-5">
         <!-- Menu de Abas Bootstrap 5.3 -->
-        <ul class="nav nav-tabs text-light mb-4 fs-4" id="retiradaDevolucaoTabs" role="tablist" style="width:100%;">
+        <ul class="nav nav-tabs text-dark mb-4 fs-4" id="retiradaDevolucaoTabs" role="tablist" style="width:100%;">
             <li class="nav-item w-50" role="presentation">
-                <button class="nav-link w-100 text-center @(tabAtiva == "retirada" ? "active" : "")" id="retiradas-tab" data-bs-toggle="tab" data-bs-target="#divRetirada" type="button" role="tab" aria-controls="divRetirada" aria-selected="@(tabAtiva == "retirada" ? "true" : "false")">
+                <button class="nav-link w-100 text-dark text-center @(tabAtiva == "retirada" ? "active" : "")" id="retiradas-tab" data-bs-toggle="tab" data-bs-target="#divRetirada" type="button" role="tab" aria-controls="divRetirada" aria-selected="@(tabAtiva == "retirada" ? "true" : "false")">
                     Retirar
                 </button>
             </li>
