@@ -137,7 +137,6 @@ namespace Biblioteca.Controllers
                     return NotFound();
                 }
 
-
                 var existingUser = await _context.Usuarios
                     .FirstOrDefaultAsync(u => u.AppUserId == Guid.Parse(userId));
                 if (existingUser != null)
@@ -150,7 +149,7 @@ namespace Biblioteca.Controllers
 
                 var identityUser = await _context.Users.FindAsync(userId);
 
-                if (result.Succeeded)
+                if (identityUser != null)
                 {
                     usuario.IdentityUser = identityUser;
                 }
@@ -182,7 +181,12 @@ namespace Biblioteca.Controllers
                 await _context.SaveChangesAsync();
 
                 // Adiciona o usuário à role "Aluno"
-                await _userManager.AddToRoleAsync(identityUser, "Aluno");
+                var result = await _userManager.AddToRoleAsync(identityUser, "Aluno");
+                if (!result.Succeeded)
+                {
+                    ModelState.AddModelError("", "Erro ao adicionar o usuário à role 'Aluno'.");
+                    return View(usuario);
+                }
 
                 return RedirectToAction("Index", "Home");
             }
