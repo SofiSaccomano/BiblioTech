@@ -32,6 +32,7 @@
                     </div>
                 </form>
 
+<<<<<<< HEAD
             </div>
             @Html.AntiForgeryToken()
             <table class="table table-striped tabela-reservas mt-3">
@@ -42,6 +43,61 @@
                         <th>@Html.DisplayNameFor(model => model.LivroRetirado)</th>
                         <th></th>
                         <th></th>
+=======
+        <div id="divLocalizarReserva" class="mb-4">
+            <form asp-action="Index" method="get" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="searchTerm" class="form-control" placeholder="Localizar reserva..." value="@searchTerm" />
+                    <button type="submit" class="btn btn-outline-light">
+                        <i class="bi bi-search"></i> Localizar
+                    </button>
+                </div>
+            </form>
+        </div>
+        @Html.AntiForgeryToken()
+        <table class="table table-dark table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Livro.Titulo)</th>
+                    <th>@Html.DisplayNameFor(model => model.DataReserva)</th>
+                    <th>@Html.DisplayNameFor(model => model.LivroRetirado)</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr id="reserva-@item.ReservaId">
+                        <td>@item.Livro?.Titulo</td>
+                        <td>@item.DataReserva.ToString("dd/MM/yyyy")</td>
+                        <td>@(item.LivroRetirado ? "Sim" : "Não")</td>
+                        <td>
+                            @if (item.LivroRetirado && !item.Cancelada)
+                            {
+                                <a asp-controller="Avaliacoes"
+                                   asp-action="Create"
+                                   asp-route-livroId="@item.LivroId"
+                                   asp-route-usuarioId="@item.UsuarioId"
+                                   class="btn btn-lg text-light"
+                                   style="background-color:#52130C">
+                                    Avaliar Livro
+                                </a>
+                            }
+                        </td>
+                        <td>
+                            @if (!item.Cancelada && !item.LivroRetirado)
+                            {
+                                <form asp-action="Cancelar" asp-controller="Reservas" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@item.ReservaId" />
+                                    @Html.AntiForgeryToken()
+                                    <button class="btn btn-lg text-light" style="background-color:#52130C">
+                                        Cancelar
+                                    </button>
+                                </form>
+                            }
+                        </td>
+>>>>>>> origin/Laura
                     </tr>
                 </thead>
                 <tbody>
@@ -63,6 +119,7 @@
                                         </button>
                                     </form>
 
+<<<<<<< HEAD
                                 }
                             </td>
                         </tr>
@@ -72,4 +129,9 @@
             </table>
         </div>
         <div class="col-1 col-md-2 col-lg-2"></div>
+=======
+
+            </tbody>
+        </table>
+>>>>>>> origin/Laura
     </div>

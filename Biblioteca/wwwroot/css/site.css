@@ -249,6 +249,7 @@ header {
     max-height: 51px !important;
 }
 
+<<<<<<< HEAD
 #corLetra {
     color: #4B2E2E;
 }
@@ -291,3 +292,27 @@ header {
 .formCreate {
     background-color: #D6BDB5;
 }
+=======
+.rating {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+    display: inline-flex;
+}
+
+    .rating input[type="radio"] {
+        display: none;
+    }
+
+    .rating label {
+        color: #ccc;
+        font-size: 2em;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+        .rating input[type="radio"]:checked ~ label,
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: gold;
+        }
+>>>>>>> origin/Laura
