@@ -1,7 +1,7 @@
 ﻿@model Biblioteca.Models.Avaliacao
 
 @{
-    ViewData["Title"] = "Delete";
+    ViewData["Title"] = "Excluir";
 }
 
 <div class="container py-5">
@@ -10,12 +10,11 @@
 
             <div class="card shadow-lg border-0" style="background-color:#D6BDB5">
                 <div class="card-header text-center border-0" style="background-color:#741717">
-                    <h1 class="mb-0 text-light">Excluir Avaliação</h1>
+                    <h1 class="mb-0 text-light">Excluir Livro</h1>
                 </div>
 
-                <div class="card-body">
-                    <h3 class="text-center mb-4">Tem certeza que deseja <strong>excluir</strong> esta avaliação?</h3>
-
+                <div class="card-body" id="corLetra">
+                    <h3 class="text-center mb-4">Tem certeza que deseja <strong>excluir</strong> este livro?</h3>
                     <dl class="row">
                         <dt class="col-sm-2">Nota</dt>
                         <dd class="col-sm-10">
@@ -49,29 +48,28 @@
                             @Html.DisplayNameFor(model => model.Livro)
                         </dt>
                         <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.Livro.Titulo)
+                            @Html.DisplayFor(model => model.Livro.LivroId)
                         </dd>
                         <dt class="col-sm-2">
                             @Html.DisplayNameFor(model => model.Usuario)
                         </dt>
                         <dd class="col-sm-10">
-                            @Html.DisplayFor(model => model.Usuario.NomeCompleto)
+                            @Html.DisplayFor(model => model.Usuario.UsuarioId)
                         </dd>
                     </dl>
-
-                    <div class="card-footer bg-transparent d-flex justify-content-between">
-                        <form asp-action="Delete" method="post" class="mb-0">
-                            <input type="hidden" asp-for="AvaliacaoId" />
-                            <button type="submit" class="btn btn-lg text-light" style="background-color:#52130C">
-                                <i class="bi bi-trash3"></i> Excluir
-                            </button>
-                        </form>
-                        <a asp-action="Index" class="btn btn-lg text-light" style="background-color:#52130C">
-                            <i class="bi bi-arrow-left"></i> Voltar
-                        </a>
-                    </div>
                 </div>
-                </<div>
+
+                <div class="card-footer bg-transparent d-flex justify-content-between">
+                    <form asp-action="Delete" method="post" class="mb-0">
+                        <input type="hidden" asp-for="AvaliacaoId" />
+                        <button type="submit" class="btn btn-lg text-light" style="background-color:#52130C">
+                            <i class="bi bi-trash3"></i> Excluir
+                        </button>
+                    </form>
+                    <a asp-action="Index" class="btn btn-lg text-light" style="background-color:#52130C">
+                        <i class="bi bi-arrow-left"></i> Voltar
+                    </a>
+
                 </div>
             </div>
         </div>
