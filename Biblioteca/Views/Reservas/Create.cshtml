@@ -1,16 +1,16 @@
 ﻿@model Biblioteca.Models.Reserva
 
 @{
-    ViewData["Title"] = "Cadastro de Reservas";
+    ViewData["Title"] = "Reservas";
 }
 
 <div class="row">
     <div class="col-1 col-md-2 col-lg-2"></div>
 
     <div class="col-10 col-md-8 col-lg-8">
-        <div class="bg-black text-light m-lg-5 p-5 rounded">
+        <div class="text-dark m-lg-5 p-5 rounded formCreate">
 
-            <h1 class="text-center mb-3">Cadastro de Reservas</h1>
+            <h1 class="text-center mb-3">Reservas</h1>
 
             <form asp-action="Create" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger"></div>
@@ -68,10 +68,10 @@
 
                 <div class="row mt-4">
                     <div class="col d-flex justify-content-between">
-                        <a asp-action="Index" class="btn btn-outline-light fs-5">
+                        <a asp-action="Index" class="btn btn-lg text-light" style="background-color:#52130C">
                             <i class="bi bi-arrow-left-circle"></i> Voltar
                         </a>
-                        <button type="submit" class="btn btn-light fs-5">
+                        <button type="submit" class="btn btn-lg text-light" style="background-color:#52130C">
                             <i class="bi bi-floppy"></i> Salvar
                         </button>
                     </div>
