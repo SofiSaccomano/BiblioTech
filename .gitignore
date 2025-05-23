@@ -364,7 +364,14 @@ FodyWeavers.xsd
 /Biblioteca/appsettings.json
 /Biblioteca/appsettings.json
 /Biblioteca/Controllers/AvaliacoesController.cs
+<<<<<<< HEAD
 /Biblioteca/Views/Reservas/Index.cshtml
 /Biblioteca/Views/Reservas/Index.cshtml
 /Biblioteca/wwwroot/css/site.css
 /Biblioteca/Views/Reservas/Index.cshtml
+=======
+/Biblioteca/Views/Livros/Index.cshtml
+>>>>>>> origin/Vitoria
+/.gitignore
+/.gitignore
+/Biblioteca/Views/Livros/Index.cshtml
