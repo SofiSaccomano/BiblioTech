@@ -24,7 +24,7 @@ body {
 }
 
 .parallax {
-    background-image: url('../img/Design sem nome (70).png');
+    background-image: url(../img/flor.png);
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
