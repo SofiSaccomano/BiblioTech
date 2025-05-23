@@ -265,6 +265,29 @@ header {
         margin-top: 0;
     }
 
-/*#corTabela {
+
+
+.tabela-reservas {
+    background-color: #D6BDB5; /* fundo geral da tabela */
+}
+
+    .tabela-reservas thead {
+        background-color: #A9746E;
+        color: white;
+    }
+
+    .tabela-reservas tbody tr:nth-child(even) {
+        background-color: #EADBD7;
+    }
+
+    .tabela-reservas tbody tr:nth-child(odd) {
+        background-color: #F9F3F1;
+    }
+
+    .tabela-reservas td, .tabela-reservas th {
+        border-color: #A9746E;
+    }
+
+.formCreate {
     background-color: #D6BDB5;
-}*/
+}
