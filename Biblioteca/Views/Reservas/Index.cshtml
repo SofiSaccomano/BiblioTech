@@ -17,16 +17,10 @@
         <div class="row align-items-start gap-3 mb-4">
             <!-- Botão Adicionar -->
             <div class="col-auto d-flex align-items-stretch">
-<<<<<<< HEAD
                 <a asp-action="Create" class="btn btn-outline-light px-4 d-flex align-items-center" style="height: 54px; background-color:#52130C;">
-=======
-                <a asp-action="Create" class="btn btn-dark px-4 d-flex align-items-center" style="height: 54px;">
->>>>>>> origin/Kawany
                     <i class="bi bi-plus-circle"></i> Adicionar
                 </a>
             </div>
-
-<<<<<<< HEAD
             <!-- Campo de Busca -->
             <div id="divLocalizarReserva" class="col">
                 <form asp-action="Index" method="get">
@@ -34,21 +28,11 @@
                         <input type="text" name="searchTerm" value="@Context.Request.Query["searchTerm"]" class="form-control" placeholder="Buscar reserva..." />
                         <button type="submit" class="btn btn-outline-light" style="background-color:#52130C">
                             <i class="bi bi-search"></i> Buscar
-=======
-
-            <div id="divLocalizarReserva" class="mb-4">
-                <form asp-action="Index" method="get" class="mb-3">
-                    <div class="input-group">
-                        <input type="text" name="searchTerm" class="form-control" placeholder="Localizar reserva..." value="@searchTerm" />
-                        <button type="submit" class="btn btn-outline-light text-light" style="background-color:#52130C">
-                            <i class="bi bi-search"></i> Localizar
->>>>>>> origin/Kawany
                         </button>
                     </div>
                 </form>
 
             </div>
-<<<<<<< HEAD
         </div>
         @Html.AntiForgeryToken()
         <table class="table table-dark table-striped mt-3">
@@ -82,49 +66,12 @@
 
                             }
                         </td>
-=======
->>>>>>> origin/Kawany
 
-
-            @Html.AntiForgeryToken()
-            <table class="table table-striped mt-3">
-                <thead>
-                    <tr>
-                        <th>@Html.DisplayNameFor(model => model.Livro.Titulo)</th>
-                        <th>@Html.DisplayNameFor(model => model.DataReserva)</th>
-                        <th>@Html.DisplayNameFor(model => model.LivroRetirado)</th>
-                        <th></th>
-                        <th></th>
                     </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr id="reserva-@item.ReservaId">
-                            <td>@item.Livro?.Titulo</td>
-                            <td>@item.DataReserva.ToString("dd/MM/yyyy")</td>
-                            <td>@(item.LivroRetirado ? "Sim" : "Não")</td>
-                            <td></td>
-                            <td>
-                                @if (!item.Cancelada && !item.LivroRetirado)
-                                {
-                                    <form asp-action="Cancelar" asp-controller="Reservas" method="post" style="display:inline;">
-                                        <input type="hidden" name="id" value="@item.ReservaId" />
-                                        @Html.AntiForgeryToken()
-                                        <button type="submit" class="btn btn-light text-light p-2 btn-sm w-50" style="background-color:#52130C">
-                                            Cancelar
-                                        </button>
-                                    </form>
+                }
 
-                                }
-                            </td>
-
-
-                        </tr>
-                    }
-
-                </tbody>
-            </table>
-        </div>
-        <div class="col-1 col-md-2 col-lg-2"></div>
+            </tbody>
+        </table>
     </div>
+    <div class="col-1 col-md-2 col-lg-2"></div>
+</div>
