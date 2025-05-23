@@ -42,7 +42,8 @@
                         <td>
                             @if (!string.IsNullOrEmpty(item.UrlFoto))
                             {
-                                <img src="@item.UrlFoto"
+
+                                <img src="@Url.Content("~/" + item.UrlFoto)"
                                      class="img-thumbnail"
                                      style="width: 50px; height: 75px; object-fit: cover;" />
                             }

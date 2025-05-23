@@ -122,61 +122,66 @@ namespace Biblioteca.Controllers
         // POST: Usuarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-
+        // POST: Usuarios/Create
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(
-            [Bind("UsuarioId,NomeCompleto,CPF,Celular,DataNascimento,UrlFoto")] Usuario usuario,
-            string username,
-            string senha,
-            IFormFile Foto)
+        public async Task<IActionResult> Create([Bind("UsuarioId,NomeCompleto,CPF,Celular,DataNascimento,AppUserId")] Usuario usuario, IFormFile Foto)
         {
             if (ModelState.IsValid)
             {
-                // Monta o e-mail padrão
-                var email = $"{username}@aluno.com";
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                if (userId == null)
+                    return NotFound();
 
-                // Cria o IdentityUser
-                var identityUser = new IdentityUser { UserName = email, Email = email };
-                var result = await _userManager.CreateAsync(identityUser, senha);
-
-                if (result.Succeeded)
+                var existingUser = await _context.Usuarios
+                    .FirstOrDefaultAsync(u => u.AppUserId == Guid.Parse(userId));
+                if (existingUser != null)
                 {
-                    await _userManager.AddToRoleAsync(identityUser, "Aluno");
-                    usuario.AppUserId = Guid.Parse(identityUser.Id);
+                    ModelState.AddModelError("AppUserId", "E-mail já cadastrado.");
+                    return View(usuario);
+                }
+
+                usuario.AppUserId = Guid.Parse(userId);
+
+                var identityUser = await _context.Users.FindAsync(userId);
+
+                if (identityUser != null)
+                {
                     usuario.IdentityUser = identityUser;
-
-                    // Salva a foto se enviada
-                    if (Foto != null && Foto.Length > 0)
-                    {
-                        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-                        if (!Directory.Exists(uploads))
-                            Directory.CreateDirectory(uploads);
-
-                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Foto.FileName);
-                        var filePath = Path.Combine(uploads, fileName);
-
-                        using (var stream = new FileStream(filePath, FileMode.Create))
-                        {
-                            await Foto.CopyToAsync(stream);
-                        }
-
-                        usuario.UrlFoto = "/uploads/" + fileName;
-                    }
-
-                    _context.Add(usuario);
-                    await _context.SaveChangesAsync();
-
-                    // Redireciona para a Home após cadastro
-                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
+                    ModelState.AddModelError("AppUserId", "Usuário não encontrado.");
+                    return View(usuario);
                 }
+
+                // Salva a foto se enviada
+                if (Foto != null && Foto.Length > 0)
+                {
+                    var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                    if (!Directory.Exists(uploads))
+                        Directory.CreateDirectory(uploads);
+
+                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Foto.FileName);
+                    var filePath = Path.Combine(uploads, fileName);
+
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await Foto.CopyToAsync(stream);
+                    }
+
+                    usuario.UrlFoto = "uploads/" + fileName; // sem barra inicial
+                }
+
+                _context.Add(usuario);
+                await _context.SaveChangesAsync();
+
+                // Adiciona o usuário à role "Aluno"
+                await _userManager.AddToRoleAsync(identityUser, "Aluno");
+
+                return RedirectToAction("Index", "Home");
             }
             return View(usuario);
         }
@@ -184,10 +189,10 @@ namespace Biblioteca.Controllers
 
         // GET: Usuarios/Edit/5
         [Authorize]
-        public async Task<IActionResult> Edit()
+        public async Task<IActionResult> Edit(int id)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.AppUserId.ToString() == userId);
+
+            var usuario = await _context.Usuarios.FirstOrDefaultAsync(u => u.UsuarioId == id);
             if (usuario == null)
                 return NotFound();
 
