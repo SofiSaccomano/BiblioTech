@@ -34,6 +34,7 @@ body {
 
 header {
     box-shadow: rgba(0,0,0,.3) 0px 5px;
+    background-color: #600000;
 }
 
 #divPesquisa {
@@ -267,3 +268,24 @@ header {
         .rating label:hover ~ label {
             color: gold;
         }
+
+.tabela-reservas {
+    background-color: #D6BDB5; /* fundo geral da tabela */
+}
+
+    .tabela-reservas thead {
+        background-color: #A9746E;
+        color: white;
+    }
+
+    .tabela-reservas tbody tr:nth-child(even) {
+        background-color: #EADBD7;
+    }
+
+    .tabela-reservas tbody tr:nth-child(odd) {
+        background-color: #F9F3F1;
+    }
+
+    .tabela-reservas td, .tabela-reservas th {
+        border-color: #A9746E;
+    }
