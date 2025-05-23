@@ -6,7 +6,7 @@
 <div id="divPesquisa" class="pt-4 pb-4 text-black" style="background-color: #EFE6DD;">
     <p class="fs-4 text-center">Encontre seu livro, pelo nome, autor ou editora.</p>
     <form asp-controller="Livros" asp-action="Search" method="get" class="input-group form-busca">
-        <input type="text" name="searchTerm" class="form-control fs-4" placeholder="Pesquisar na BiblioTech" aria-describedby="btnPesquisar" />
+        <input type="text" name="searchTerm" class="form-control fs-4" placeholder="Pesquisar na FlyTech" aria-describedby="btnPesquisar" />
         <button class="btn btn-outline-light fs-4" type="submit" id="btnPesquisar" style="background-color:#600000;">
             <i class="bi bi-search"></i>
         </button>
@@ -87,7 +87,7 @@
             <div class="modal-footer">
                 <form id="modalReservaForm" asp-controller="Reservas" asp-action="Create" method="post" class="d-inline">
                     <input type="hidden" name="LivroId" id="modalLivroId" value="" />
-                    <button type="submit" class="btn btn-dark">
+                    <button type="submit" class="btn btn-light text-light" style="background-color:#52130C">
                         Reservar
                     </button>
                 </form>
@@ -124,8 +124,8 @@
 
 
 <div class="m-0 p-0">
-    <h2 class="text-center text-light bg-dark m-0 pt-4">TOP 5 - Livros Mais Reservados</h2>
-    <div id="divTop5" class="bg-dark m-0 pt-4 d-flex justify-content-evenly flex-wrap">
+    <h2 class="text-center  m-0 pt-4" style="background-color: #EFE6DD; color: #600000">TOP 5 - Livros Mais Reservados</h2>
+    <div id="divTop5" class=" m-0 pt-4 d-flex justify-content-evenly flex-wrap" style="background-color: #EFE6DD;">
         @if (ViewBag.LivrosMaisReservados != null)
         {
             foreach (var livro in (IEnumerable<Biblioteca.Models.Livro>)ViewBag.LivrosMaisReservados)
@@ -143,7 +143,7 @@
                         <p class="text-center">
                             <form asp-controller="Reservas" asp-action="Create" method="post" class="d-inline">
                                 <input type="hidden" name="LivroId" value="@livro.LivroId" />
-                                <button type="submit" class="btn btn-dark p-1 m-0 align-baseline">
+                                <button type="submit" class="btn btn-light text-light p-1 m-0 align-baseline" style="background-color:#52130C">
                                     Reservar
                                 </button>
                             </form>
@@ -227,6 +227,6 @@
 </div>
 -->
 
-<div id="divFooter" class="bg-dark text-center p-3">
-    <p class="lead text-light pt-3">Desenvolvido com 🤍 por Mulieres</p>
+<div id="divFooter" class="text-center p-3" style="background-color: #EFE6DD ">
+    <p class="lead pt-3" style="color:#600000">Desenvolvido com 🤍 por Mulieres</p>
 </div>
