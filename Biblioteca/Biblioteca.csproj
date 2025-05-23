@@ -12,9 +12,21 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <Content Remove="wwwroot\img\Design sem nome %2869%29.png" />
+	  <Content Remove="wwwroot\img\download %2843%29.jpg" />
+	  <Content Remove="wwwroot\img\download %2844%29.jpg" />
+	  <Content Remove="wwwroot\img\floresAvermelhadasFiltro.png" />
+	  <Content Remove="wwwroot\img\floresBrancas.png" />
+	  <Content Remove="wwwroot\img\floress.png" />
+	  <Content Remove="wwwroot\img\floresVermelhas.jpg" />
+	  <Content Remove="wwwroot\img\fundoteste.png" />
+	  <Content Remove="wwwroot\img\img.jpg" />
 	  <Content Remove="wwwroot\img\livraria.jpg" />
 	  <Content Remove="wwwroot\img\livraria2.jpg" />
+	  <Content Remove="wwwroot\img\livrosBiblioteca.png" />
 	  <Content Remove="wwwroot\img\livross.jpg" />
+	  <Content Remove="wwwroot\img\lua.png" />
+	  <Content Remove="wwwroot\img\Sem nome %281940 x 1080 px%29.png" />
 	</ItemGroup>
 
 	<ItemGroup>
