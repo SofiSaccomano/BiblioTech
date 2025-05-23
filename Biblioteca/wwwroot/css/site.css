@@ -227,6 +227,7 @@ header {
 
 
 #divMinhasRetiradas {
+    background-color: #D6BDB5;
     font-size: 14px;
     border-radius: 16px;
     margin-top: 42px;
@@ -263,3 +264,7 @@ header {
     #listaGeneros h1 {
         margin-top: 0;
     }
+
+/*#corTabela {
+    background-color: #D6BDB5;
+}*/
