@@ -55,7 +55,7 @@
                         <td>@item.DataReserva.ToString("dd/MM/yyyy")</td>
                         <td>@(item.LivroRetirado ? "Sim" : "Não")</td>
                         <td>
-                            @if (item.LivroRetirado && !item.Cancelada)
+                            @if (User.IsInRole("Aluno") && !User.IsInRole("Admin") && item.LivroRetirado && !item.Cancelada)
                             {
                                 <a asp-controller="Avaliacoes"
                                    asp-action="Create"
@@ -65,6 +65,7 @@
                                     Avaliar Livro
                                 </a>
                             }
+
                         </td>
                         <td>
                             @if (!item.Cancelada && !item.LivroRetirado)

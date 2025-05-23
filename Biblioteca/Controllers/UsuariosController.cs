@@ -113,6 +113,7 @@ namespace Biblioteca.Controllers
         }
 
         // GET: Usuarios/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -124,65 +125,61 @@ namespace Biblioteca.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UsuarioId,NomeCompleto,CPF,Celular,DataNascimento,AppUserId")] Usuario usuario, IFormFile Foto)
+        public async Task<IActionResult> Create(
+            [Bind("UsuarioId,NomeCompleto,CPF,Celular,DataNascimento,UrlFoto")] Usuario usuario,
+            string username,
+            string senha,
+            IFormFile Foto)
         {
             if (ModelState.IsValid)
             {
-                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-                if (userId == null)
-                    return NotFound();
+                // Monta o e-mail padrão
+                var email = $"{username}@aluno.com";
 
-                var existingUser = await _context.Usuarios
-                    .FirstOrDefaultAsync(u => u.AppUserId == Guid.Parse(userId));
-                if (existingUser != null)
+                // Cria o IdentityUser
+                var identityUser = new IdentityUser { UserName = email, Email = email };
+                var result = await _userManager.CreateAsync(identityUser, senha);
+
+                if (result.Succeeded)
                 {
-                    ModelState.AddModelError("AppUserId", "E-mail já cadastrado.");
-                    return View(usuario);
-                }
-
-                usuario.AppUserId = Guid.Parse(userId);
-
-                var identityUser = await _context.Users.FindAsync(userId);
-
-                if (identityUser != null)
-                {
+                    await _userManager.AddToRoleAsync(identityUser, "Aluno");
+                    usuario.AppUserId = Guid.Parse(identityUser.Id);
                     usuario.IdentityUser = identityUser;
+
+                    // Salva a foto se enviada
+                    if (Foto != null && Foto.Length > 0)
+                    {
+                        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                        if (!Directory.Exists(uploads))
+                            Directory.CreateDirectory(uploads);
+
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Foto.FileName);
+                        var filePath = Path.Combine(uploads, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await Foto.CopyToAsync(stream);
+                        }
+
+                        usuario.UrlFoto = "/uploads/" + fileName;
+                    }
+
+                    _context.Add(usuario);
+                    await _context.SaveChangesAsync();
+
+                    // Redireciona para a Home após cadastro
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    ModelState.AddModelError("AppUserId", "Usuário não encontrado.");
-                    return View(usuario);
-                }
-
-                // Salva a foto se enviada
-                if (Foto != null && Foto.Length > 0)
-                {
-                    var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-                    if (!Directory.Exists(uploads))
-                        Directory.CreateDirectory(uploads);
-
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Foto.FileName);
-                    var filePath = Path.Combine(uploads, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    foreach (var error in result.Errors)
                     {
-                        await Foto.CopyToAsync(stream);
+                        ModelState.AddModelError("", error.Description);
                     }
-
-                    usuario.UrlFoto = "/uploads/" + fileName;
                 }
-
-                _context.Add(usuario);
-                await _context.SaveChangesAsync();
-
-                // Adiciona o usuário à role "Aluno"
-                await _userManager.AddToRoleAsync(identityUser, "Aluno");
-
-                return RedirectToAction("Index", "Home");
             }
             return View(usuario);
         }
-
 
 
         // GET: Usuarios/Edit/5
@@ -314,43 +311,6 @@ namespace Biblioteca.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UsuarioId,NomeCompleto,CPF,Celular,DataNascimento,UrlFoto")] Usuario usuario, string username, string senha)
-        {
-            if (ModelState.IsValid)
-            {
-                // Monta o e-mail padrão
-                var email = $"{username}@aluno.com";
-
-                // Cria o IdentityUser
-                var identityUser = new IdentityUser { UserName = email, Email = email };
-                var result = await _userManager.CreateAsync(identityUser, senha);
-
-                if (result.Succeeded)
-                {
-                    // Adiciona à role "Aluno"
-                    await _userManager.AddToRoleAsync(identityUser, "Aluno");
-
-                    // Relaciona IdentityUser ao Usuario
-                    usuario.AppUserId = Guid.Parse(identityUser.Id);
-                    usuario.IdentityUser = identityUser;
-
-                    _context.Add(usuario);
-                    await _context.SaveChangesAsync();
-
-                    return RedirectToAction("Index", "Home");
-                }
-                else
-                {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
-                }
-            }
-            return View(usuario);
-        }
 
     }
 }

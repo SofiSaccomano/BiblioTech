@@ -53,9 +53,15 @@
         </dd>
     </dl>
 
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="AvaliacaoId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
-    </form>
+    <div class="card-footer bg-transparent d-flex justify-content-between">
+        <form asp-action="Delete" method="post" class="mb-0">
+            <input type="hidden" asp-for="AvaliacaoId" />
+            <button type="submit" class="btn btn-lg text-light" style="background-color:#52130C">
+                <i class="bi bi-trash3"></i> Excluir
+            </button>
+        </form>
+        <a asp-action="Index" class="btn btn-lg text-light" style="background-color:#52130C">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+    </div>
 </div>

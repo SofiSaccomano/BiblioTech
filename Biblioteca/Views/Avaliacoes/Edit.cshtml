@@ -43,15 +43,18 @@
                 <input class="form-control" value="@Model.Usuario?.NomeCompleto" readonly />
             </div>
 
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+            <div class="row gap-3 mb-3">
+                <div class="col">
+                    <div class="form-group d-flex justify-content-between pt-4">
+                        <button asp-action="Index" class="btn btn-sm btn-outline-light fs-6" style="background-color:#52130C"><i class="bi bi-arrow-left"></i> Voltar</button>
+                        <button type="submit" id="btnSalvar" class="btn btn-sm btn-outline-light fs-6 " style="background-color:#52130C">
+                            <i class="bi bi-floppy"></i> Salvar
+                        </button>
+                    </div>
+                </div>
             </div>
         </form>
     </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
 </div>
 
 @section Scripts {
