@@ -18,25 +18,22 @@ html {
 }
 
 body {
-    background-color: #EFE6DD;
     margin: 0;
     padding: 0;
 }
 
 .parallax {
-    background-image: url(../img/flor.png);
+    background-image: url('../img/biblioteca.jpeg');
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
+    /* Remova height e max-height! */
 }
-
-
 
 
 header {
     box-shadow: rgba(0,0,0,.3) 0px 5px;
-    background-color: #600000;
 }
 
 #divPesquisa {
@@ -227,7 +224,6 @@ header {
 
 
 #divMinhasRetiradas {
-    background-color: #D6BDB5;
     font-size: 14px;
     border-radius: 16px;
     margin-top: 42px;
@@ -249,45 +245,25 @@ header {
     max-height: 51px !important;
 }
 
-#corLetra {
-    color: #4B2E2E;
+.rating {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+    display: inline-flex;
 }
 
-#listaGeneros {
-    font-size: 16px;
-    border-radius: 16px;
-    box-shadow: rgba(0,0,0,.4) 12px 12px;
-    padding-top: 1.5rem; /* Reduza o valor conforme desejar */
-    padding-bottom: 2rem; /* Mantém o espaçamento inferior confortável */
-}
-
-    #listaGeneros h1 {
-        margin-top: 0;
+    .rating input[type="radio"] {
+        display: none;
     }
 
-
-
-.tabela-reservas {
-    background-color: #D6BDB5; /* fundo geral da tabela */
-}
-
-    .tabela-reservas thead {
-        background-color: #A9746E;
-        color: white;
+    .rating label {
+        color: #ccc;
+        font-size: 2em;
+        cursor: pointer;
+        transition: color 0.2s;
     }
 
-    .tabela-reservas tbody tr:nth-child(even) {
-        background-color: #EADBD7;
-    }
-
-    .tabela-reservas tbody tr:nth-child(odd) {
-        background-color: #F9F3F1;
-    }
-
-    .tabela-reservas td, .tabela-reservas th {
-        border-color: #A9746E;
-    }
-
-.formCreate {
-    background-color: #D6BDB5;
-}
+        .rating input[type="radio"]:checked ~ label,
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: gold;
+        }

@@ -1,232 +1,79 @@
-﻿@model IEnumerable<Biblioteca.Models.Livro>
+﻿@model IEnumerable<Biblioteca.Models.Reserva>
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Minhas Reservas";
+    string searchTerm = ViewBag.SearchTerm as string ?? "";
 }
 
-<div id="divPesquisa" class="pt-4 pb-4 text-black" style="background-color: #EFE6DD;">
-    <p class="fs-4 text-center">Encontre seu livro, pelo nome, autor ou editora.</p>
-    <form asp-controller="Livros" asp-action="Search" method="get" class="input-group form-busca">
-        <input type="text" name="searchTerm" class="form-control fs-4" placeholder="Pesquisar na FlyTech" aria-describedby="btnPesquisar" />
-        <button class="btn btn-outline-light fs-4" type="submit" id="btnPesquisar" style="background-color:#600000;">
-            <i class="bi bi-search"></i>
-        </button>
-    </form>
-</div>
+<div class="row">
+    <div class="col-1 col-md-2 col-lg-2"></div>
+    <div id="divMinhasRetiradas" class="col-10 col-md-8 col-lg-8 bg-black text-light m-lg-5 mb-3 p-5">
+        <h1 class="text-center mb-5">Minhas Reservas</h1>
 
-
-<!-- ... (código existente acima) ... -->
-
-<div id="divLancamentos">
-    <div class="parallax pt-4 d-flex justify-content-evenly flex-wrap">
-        @foreach (var livro in Model)
+        @if (TempData["SuccessMessage"] != null)
         {
-            <div class="card text-center mt-2 mb-3" style="width: 16rem;">
-                <div class="w-100 text-center mt-3">
-                    <img src="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Action("BuscarCapa", "Livros", new { id = livro.LivroId }))"
-                         class="card-img-top img-fluid livro-capa"
-                         alt="Capa do Livro"
-                         style="height: 200px; object-fit: cover; cursor:pointer;"
-                         data-titulo="@livro.Titulo"
-                         data-autor="@livro.Autor"
-                         data-genero="@livro.Genero?.Nome"
-                         data-editora="@livro.Editora"
-                         data-ano="@livro.DataPublicacao"
-                         data-sinopse="@livro.Descricao"
-                         data-numeroPaginas="@livro.NumeroPaginas"
-                         data-isbn="@livro.ISBN10"
-                         data-isbn13="@livro.ISBN13"
-                         data-capa="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Action("BuscarCapa", "Livros", new { id = livro.LivroId }))"
-                         data-livroid="@livro.LivroId" />
-
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title">@livro.Titulo</h4>
-                    <h5 class="lead">@livro.Autor</h5>
-                    <p class="mb-1"><span class="badge bg-secondary">@livro.Genero?.Nome</span></p>
-                    <p class="text-center">
-                        <form asp-controller="Reservas" asp-action="Create" method="post" class="d-inline">
-                            <input type="hidden" name="LivroId" value="@livro.LivroId" />
-                            <button type="submit" class="btn btn-light text-light p-1 m-0 align-baseline" style="background-color:#52130C">
-                                Reservar
-                            </button>
-                        </form>
-                    </p>
-                </div>
-            </div>
+            <div class="alert alert-success">@TempData["SuccessMessage"]</div>
         }
-    </div>
-</div>
 
-<!-- Modal Bootstrap -->
-<div class="modal fade" id="livroModal" tabindex="-1" aria-labelledby="livroModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="livroModalLabel">Detalhes do Livro</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fechar"></button>
-            </div>
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-md-3 text-center">
-                        <img id="modalCapa" src="" alt="Capa do Livro" class="img-fluid mb-3" style="max-height: 220px;" />
-                    </div>
-                    <div class="col-md-9 text-start">
-                        <h4 id="modalTitulo"></h4>
-                        <p><strong>Autor:</strong> <span id="modalAutor"></span></p>
-                        <p><strong>Gênero:</strong> <span id="modalGenero"></span></p>
-                        <p><strong>Sinopse:</strong> <span id="modalSinopse"></span></p>
-                        <p><strong>Numero Páginas:</strong> <span id="modalNumeroPaginas"></span></p>
-                        <p><strong>Editora:</strong> <span id="modalEditora"></span></p>
-                        <p><strong>Data Publicação:</strong> <span id="modalAno"></span></p>
-                        <p><strong>ISBN:</strong> <span id="modalISBN"></span></p>
-                        <p><strong>ISBN13:</strong> <span id="modalISBN13"></span></p>
 
-                    </div>
-                </div>
-            </div>
-            <div class="modal-footer">
-                <form id="modalReservaForm" asp-controller="Reservas" asp-action="Create" method="post" class="d-inline">
-                    <input type="hidden" name="LivroId" id="modalLivroId" value="" />
-                    <button type="submit" class="btn btn-light text-light" style="background-color:#52130C">
-                        Reservar
+        <div id="divLocalizarReserva" class="mb-4">
+            <form asp-action="Index" method="get" class="mb-3">
+                <div class="input-group">
+                    <input type="text" name="searchTerm" class="form-control" placeholder="Localizar reserva..." value="@searchTerm" />
+                    <button type="submit" class="btn btn-outline-light">
+                        <i class="bi bi-search"></i> Localizar
                     </button>
-                </form>
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
-            </div>
+                </div>
+            </form>
         </div>
+        @Html.AntiForgeryToken()
+        <table class="table table-dark table-striped mt-3">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.Livro.Titulo)</th>
+                    <th>@Html.DisplayNameFor(model => model.DataReserva)</th>
+                    <th>@Html.DisplayNameFor(model => model.LivroRetirado)</th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr id="reserva-@item.ReservaId">
+                        <td>@item.Livro?.Titulo</td>
+                        <td>@item.DataReserva.ToString("dd/MM/yyyy")</td>
+                        <td>@(item.LivroRetirado ? "Sim" : "Não")</td>
+                        <td>
+                            @if (item.LivroRetirado && !item.Cancelada)
+                            {
+                                <a asp-controller="Avaliacoes"
+                                   asp-action="Create"
+                                   asp-route-livroId="@item.LivroId"
+                                   asp-route-usuarioId="@item.UsuarioId"
+                                   class="btn btn-lg text-light"
+                                   style="background-color:#52130C">
+                                    Avaliar Livro
+                                </a>
+                            }
+                        </td>
+                        <td>
+                            @if (!item.Cancelada && !item.LivroRetirado)
+                            {
+                                <form asp-action="Cancelar" asp-controller="Reservas" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@item.ReservaId" />
+                                    @Html.AntiForgeryToken()
+                                    <button class="btn btn-lg text-light" style="background-color:#52130C">
+                                        Cancelar
+                                    </button>
+                                </form>
+                            }
+                        </td>
+                    </tr>
+                }
+
+
+            </tbody>
+        </table>
     </div>
-</div>
-
-@section Scripts {
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            var modal = new bootstrap.Modal(document.getElementById('livroModal'));
-            document.querySelectorAll('.livro-capa').forEach(function (img) {
-                img.addEventListener('click', function () {
-                    document.getElementById('modalCapa').src = img.getAttribute('data-capa');
-                    document.getElementById('modalTitulo').textContent = img.getAttribute('data-titulo');
-                    document.getElementById('modalAutor').textContent = img.getAttribute('data-autor');
-                    document.getElementById('modalGenero').textContent = img.getAttribute('data-genero') || '';
-                    document.getElementById('modalNumeroPaginas').textContent = img.getAttribute('data-numeroPaginas') || '';
-                    document.getElementById('modalEditora').textContent = img.getAttribute('data-editora') || '';
-                    document.getElementById('modalAno').textContent = img.getAttribute('data-ano') || '';
-                    document.getElementById('modalISBN').textContent = img.getAttribute('data-isbn') || '';
-                    document.getElementById('modalISBN13').textContent = img.getAttribute('data-isbn13') || '';
-                    document.getElementById('modalSinopse').textContent = img.getAttribute('data-sinopse') || '';
-                    document.getElementById('modalLivroId').value = img.getAttribute('data-livroid');
-                    modal.show();
-                });
-            });
-        });
-    </script>
-}
-<!-- ... (restante do código) ... -->
-
-
-<div class="m-0 p-0">
-    <h2 class="text-center  m-0 pt-4" style="background-color: #EFE6DD; color: #600000">TOP 5 - Livros Mais Reservados</h2>
-    <div id="divTop5" class=" m-0 pt-4 d-flex justify-content-evenly flex-wrap" style="background-color: #EFE6DD;">
-        @if (ViewBag.LivrosMaisReservados != null)
-        {
-            foreach (var livro in (IEnumerable<Biblioteca.Models.Livro>)ViewBag.LivrosMaisReservados)
-            {
-                <div class="card text-center mt-2 mb-3" style="width: 16rem;">
-                    <div class="w-100 text-center mt-3">
-                        <img src="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Action("BuscarCapa", "Livros", new { id = livro.LivroId }))"
-                             class="card-img-top img-fluid"
-                             alt="Capa do Livro" style="height: 200px; object-fit: cover;" />
-                    </div>
-                    <div class="card-body">
-                        <h4 class="card-title">@livro.Titulo</h4>
-                        <h5 class="lead">@livro.Autor</h5>
-                        <p class="mb-1"><span class="badge bg-secondary">@livro.Genero?.Nome</span></p>
-                        <p class="text-center">
-                            <form asp-controller="Reservas" asp-action="Create" method="post" class="d-inline">
-                                <input type="hidden" name="LivroId" value="@livro.LivroId" />
-                                <button type="submit" class="btn btn-light text-light p-1 m-0 align-baseline" style="background-color:#52130C">
-                                    Reservar
-                                </button>
-                            </form>
-                        </p>
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <span class="text-light">Nenhum livro reservado ainda.</span>
-        }
-    </div>
-</div>
-
-
-<!--
-<div id="divAvalicao">
-
-    <div class="parallax pt-4 pb-5 ">
-        <h2 class="text-center text-black bg-transparent m-0 pt-2 text-shadow-white">Livros com Melhores Avaliações</h2>
-
-        <div class="pt-3 d-flex justify-content-evenly">
-            <div class="card text-center mt-2">
-                <div class="w-100 text-center mt-3">
-                    <img src="~/img/livro.png" class="card-img-top img-fluid" alt="Capa do Livro">
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title">A Fazenda SFantasma</h4>
-                    <h5 class="lead">Gustavo F. Francelin</h5>
-                    <p>Avaliações</p>
-                    <p class="text-center">
-                        <a href="#" class="card-link btn btn-dark">Reservar</a>
-                    </p>
-                </div>
-            </div>
-
-            <div class="card text-center mt-2">
-                <div class="w-100 text-center mt-3">
-                    <img src="~/img/livro.png" class="card-img-top img-fluid" alt="Capa do Livro">
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title">A Fazenda SFantasma</h4>
-                    <h5 class="lead">Gustavo F. Francelin</h5>
-                    <p>Avaliações</p>
-                    <p class="text-center">
-                        <a href="#" class="card-link btn btn-dark">Reservar</a>
-                    </p>
-                </div>
-            </div>
-
-            <div class="card text-center mt-2">
-                <div class="w-100 text-center mt-3">
-                    <img src="~/img/livro.png" class="card-img-top img-fluid" alt="Capa do Livro">
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title">A Fazenda SFantasma</h4>
-                    <h5 class="lead">Gustavo F. Francelin</h5>
-                    <p>Avaliações</p>
-                    <p class="text-center">
-                        <a href="#" class="card-link btn btn-dark">Reservar</a>
-                    </p>
-                </div>
-            </div>
-
-            <div class="card text-center mt-2">
-                <div class="w-100 text-center mt-3">
-                    <img src="~/img/livro.png" class="card-img-top img-fluid" alt="Capa do Livro">
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title">A Fazenda SFantasma</h4>
-                    <h5 class="lead">Gustavo F. Francelin</h5>
-                    <p>Avaliações</p>
-                    <p class="text-center">
-                        <a href="#" class="card-link btn btn-dark">Reservar</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
--->
-
-<div id="divFooter" class="text-center p-3" style="background-color: #EFE6DD ">
-    <p class="lead pt-3" style="color:#600000">Desenvolvido com 🤍 por Mulieres</p>
+    <div class="col-1 col-md-2 col-lg-2"></div>
 </div>
