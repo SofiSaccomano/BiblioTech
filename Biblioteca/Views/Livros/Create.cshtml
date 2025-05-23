@@ -132,9 +132,13 @@
                     <div class="col">
                         <div class="form-group d-flex justify-content-between pt-4">
 
-                            <button asp-action="Index" class="btn btn-outline-light fs-5" style="background-color:#52130C;">
-                                <i class="bi bi-arrow-clockwise"></i> Voltar
-                            </button>
+                            
+                                <button asp-action="Index" class="btn btn-outline-light fs-5" style="background-color:#52130C;">
+                                    <a asp-action="Index">
+                                        <i class="bi bi-arrow-clockwise"></i> Voltar
+                                    </a>
+                                </button>
+                            </a>
 
                             <button type="submit" id="btnSalvar" class="btn btn-outline-light fs-5" style="background-color:#52130C;">
                                 <i class="bi bi-floppy"></i>  Salvar
