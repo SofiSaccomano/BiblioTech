@@ -4,10 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
-<div id="listaAvaliacoes" class="container bg-black text-light p-5">
-    <h1 class="text-center text-light mb-3">Minhas Avaliações</h1>
+<div id="listaAvaliacoes" class="container tabela-reservas text-dark p-5 my-5 mt-6 d-flex flex-column justify-content-center" style="min-height: 60vh;">
+    <h1 class="text-center text-dark mb-3">Minhas Avaliações</h1>
 
-    <table class="table table-dark text-light table-striped">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Livro</th>
@@ -38,10 +38,10 @@
                     <td>
                         @if (User.IsInRole("Aluno") && User.Identity.Name == item.Usuario?.IdentityUser?.Email)
                         {
-                            <a asp-action="Edit" asp-route-id="@item.AvaliacaoId" class="text-light text-decoration-none me-2">
+                            <a asp-action="Edit" asp-route-id="@item.AvaliacaoId" class="text-dark text-decoration-none me-2">
                                 <i class="bi bi-pencil-square"></i>
                             </a>
-                            <a asp-action="Delete" asp-route-id="@item.AvaliacaoId" class="text-light text-decoration-none me-2">
+                            <a asp-action="Delete" asp-route-id="@item.AvaliacaoId" class="text-dark text-decoration-none me-2">
                                 <i class="bi bi-trash3"></i>
                             </a>
                         }
