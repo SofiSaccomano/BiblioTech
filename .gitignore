@@ -375,3 +375,5 @@ FodyWeavers.xsd
 /.gitignore
 /.gitignore
 /Biblioteca/Views/Livros/Index.cshtml
+/Biblioteca/wwwroot/css/site.css
+/Biblioteca/Views/Reservas/Index.cshtml
