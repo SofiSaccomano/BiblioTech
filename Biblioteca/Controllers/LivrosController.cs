@@ -110,7 +110,7 @@ namespace Biblioteca.Controllers
 
             var livro = await _context.Livros
                 .Include(l => l.Genero)
-                .Include(l => l.Avaliacoes)
+                //.Include(l => l.Avaliacoes)
                 .FirstOrDefaultAsync(l => l.LivroId == id);
 
             if (livro == null)
