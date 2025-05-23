@@ -363,3 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 /Biblioteca/appsettings.json
 /Biblioteca/appsettings.json
+/Biblioteca/Controllers/AvaliacoesController.cs
