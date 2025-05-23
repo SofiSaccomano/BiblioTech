@@ -112,6 +112,12 @@
                     <div class="col-12">
                         <div class="form-group">
                             <label asp-for="UrlCapa" class="control-label"></label>
+                            @if (!string.IsNullOrEmpty(Model.UrlCapa))
+                            {
+                                <div class="mb-2">
+                                    <img src="~/@Model.UrlCapa" alt="Capa atual" class="img-thumbnail" style="width: 100px; height: 150px; object-fit: cover;" />
+                                </div>
+                            }
                             <input type="file" asp-for="UrlCapa" name="UrlCapa" class="form-control" accept="image/*" />
                             <span asp-validation-for="UrlCapa" class="text-danger"></span>
                         </div>

@@ -142,15 +142,14 @@
                     <td>
                         @if (!string.IsNullOrEmpty(item.UrlCapa))
                         {
-                            <img src="@Url.Action("BuscarCapa", "Livros", new { id = item.LivroId })"
-                                 class="img-thumbnail"
-                                 style="width: 50px; height: 75px; object-fit: cover;" />
+                            <img src="~/@item.UrlCapa" class="img-thumbnail" style="width: 50px; height: 75px; object-fit: cover;" />
                         }
                         else
                         {
                             <img src="~/img/sem-imagem.jpg" alt="Sem Capa" class="img-thumbnail" style="width: 50px; height: 75px; object-fit: cover;" />
                         }
                     </td>
+
                     <td>
                         @Html.DisplayFor(modelItem => item.Titulo)
                     </td>
