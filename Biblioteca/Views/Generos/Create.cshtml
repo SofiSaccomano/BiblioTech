@@ -4,32 +4,49 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
-
-<h4>Genero</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Nome" class="control-label"></label>
-                <input asp-for="Nome" class="form-control" />
-                <span asp-validation-for="Nome" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+    <div class="col-1 col-md-2 col-lg-2">
+    </div>
+
+    <div class="col-10 col-md-8 col-lg-8">
+
+        <div id="divLivro" class="m-lg-5 p-5 tabela-reservas text-dark p-5">
+
+            <h1 class="text-center text-dark mb-3">Adicionar Gênero</h1>
+
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="row gap-3 mb-3">
+                    <div class="col-12">
+                        <div class="form-group">
+                            <label asp-for="Nome" class="control-label"></label>
+                            <input asp-for="Nome" class="form-control" />
+                            <span asp-validation-for="Nome" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row gap-3 mb-3">
+                    <div class="col">
+                        <div class="form-group d-flex justify-content-between pt-4">
+
+                            <button asp-action="Index" class="btn btn-outline-light fs-5" style="background-color:#52130C;">
+                                <i class="bi bi-arrow-clockwise"></i> Voltar
+                            </button>
+
+                            <button type="submit" id="btnSalvar" class="btn btn-outline-light fs-5" style="background-color:#52130C;">
+                                <i class="bi bi-floppy"></i>  Salvar
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-}
+    }

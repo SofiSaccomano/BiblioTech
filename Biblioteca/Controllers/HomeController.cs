@@ -42,6 +42,18 @@ namespace Biblioteca.Controllers
                 .Select(id => livrosMaisReservados.First(l => l.LivroId == id))
                 .ToList();
 
+            var avaliacoesPorLivro = await _context.Avaliacoes
+                .GroupBy(a => a.LivroId)
+                .Select(g => new
+                {
+                    LivroId = g.Key,
+                    Media = g.Average(a => a.Nota),
+                    Quantidade = g.Count()
+                })
+                .ToListAsync();
+
+            ViewBag.MediaAvaliacoes = avaliacoesPorLivro.ToDictionary(x => x.LivroId, x => x.Media);
+            ViewBag.QuantidadeAvaliacoes = avaliacoesPorLivro.ToDictionary(x => x.LivroId, x => x.Quantidade);
             ViewBag.LivrosMaisReservados = livrosMaisReservados;
 
             return View(ultimosLivros);

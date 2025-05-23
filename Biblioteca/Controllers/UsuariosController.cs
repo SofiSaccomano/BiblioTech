@@ -113,6 +113,7 @@ namespace Biblioteca.Controllers
         }
 
         // GET: Usuarios/Create
+        [HttpGet]
         public IActionResult Create()
         {
             return View();
@@ -124,7 +125,11 @@ namespace Biblioteca.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("UsuarioId,NomeCompleto,CPF,Celular,DataNascimento,AppUserId")] Usuario usuario, IFormFile Foto)
+        public async Task<IActionResult> Create(
+            [Bind("UsuarioId,NomeCompleto,CPF,Celular,DataNascimento,UrlFoto")] Usuario usuario,
+            string username,
+            string senha,
+            IFormFile Foto)
         {
             if (ModelState.IsValid)
             {
@@ -147,45 +152,46 @@ namespace Biblioteca.Controllers
 
                 var identityUser = await _context.Users.FindAsync(userId);
 
-                if (identityUser != null)
+                if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(identityUser, "Aluno");
+                    usuario.AppUserId = Guid.Parse(identityUser.Id);
                     usuario.IdentityUser = identityUser;
+
+                    // Salva a foto se enviada
+                    if (Foto != null && Foto.Length > 0)
+                    {
+                        var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+                        if (!Directory.Exists(uploads))
+                            Directory.CreateDirectory(uploads);
+
+                        var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Foto.FileName);
+                        var filePath = Path.Combine(uploads, fileName);
+
+                        using (var stream = new FileStream(filePath, FileMode.Create))
+                        {
+                            await Foto.CopyToAsync(stream);
+                        }
+
+                        usuario.UrlFoto = "/uploads/" + fileName;
+                    }
+
+                    _context.Add(usuario);
+                    await _context.SaveChangesAsync();
+
+                    // Redireciona para a Home após cadastro
+                    return RedirectToAction("Index", "Home");
                 }
                 else
                 {
-                    ModelState.AddModelError("AppUserId", "Usuário não encontrado.");
-                    return View(usuario);
-                }
-
-                // Salva a foto se enviada
-                if (Foto != null && Foto.Length > 0)
-                {
-                    var uploads = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
-                    if (!Directory.Exists(uploads))
-                        Directory.CreateDirectory(uploads);
-
-                    var fileName = Guid.NewGuid().ToString() + Path.GetExtension(Foto.FileName);
-                    var filePath = Path.Combine(uploads, fileName);
-
-                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    foreach (var error in result.Errors)
                     {
-                        await Foto.CopyToAsync(stream);
+                        ModelState.AddModelError("", error.Description);
                     }
-
-                    usuario.UrlFoto = "/uploads/" + fileName;
                 }
-
-                _context.Add(usuario);
-                await _context.SaveChangesAsync();
-
-                // Adiciona o usuário à role "Aluno"
-                await _userManager.AddToRoleAsync(identityUser, "Aluno");
-
-                return RedirectToAction("Index", "Home");
             }
             return View(usuario);
         }
-
 
 
         // GET: Usuarios/Edit/5

@@ -7,7 +7,7 @@
 
 <div class="row">
     <div class="col-1 col-md-2 col-lg-2"></div>
-    <div id="divMovimentos" class="col-10 col-md-8 col-lg-8 bg-black text-light m-lg-5 mb-3 p-5">
+    <div id="divMovimentos" class="col-10 col-md-8 col-lg-8 tabela-reservas text-dark m-lg-5 mb-3 p-5">
 
         <h1 class="text-center mb-5">Cadastro de Usuários</h1>
 
@@ -15,14 +15,14 @@
             <form asp-action="Buscar" method="get" class="mb-3">
                 <div class="input-group">
                     <input type="text" name="searchTerm" class="form-control" placeholder="Localizar usuário..." />
-                    <button type="submit" class="btn btn-outline-light">
+                    <button type="submit" class="btn btn-lg text-light" style="background-color:#52130C">
                         <i class="bi bi-search"></i> Localizar
                     </button>
                 </div>
             </form>
         </div>
 
-        <table class="table table-dark table-striped mt-3">
+        <table class="table table-striped mt-3">
             <thead>
                 <tr>
                     <th>@Html.DisplayNameFor(model => model.NomeCompleto)</th>
@@ -58,20 +58,20 @@
                                 : "Nenhuma")
                         </td>
                         <td>
-                            <a asp-action="Edit" asp-route-id="@item.UsuarioId" class="text-light text-decoration-none me-2"><i class="bi bi-pencil-square"></i></a>
-                            <a asp-action="Delete" asp-route-id="@item.UsuarioId" class="text-light text-decoration-none me-2"><i class="bi bi-trash3"></i></a>
+                            <a asp-action="Edit" asp-route-id="@item.UsuarioId" class="text-dark text-decoration-none me-2"><i class="bi bi-pencil-square"></i></a>
+                            <a asp-action="Delete" asp-route-id="@item.UsuarioId" class="text-dark text-decoration-none me-2"><i class="bi bi-trash3"></i></a>
                         </td>
                         <td>
                             @if (rolesPorUsuario != null && rolesPorUsuario.ContainsKey(item.UsuarioId) && rolesPorUsuario[item.UsuarioId] == "Admin")
                             {
                                 <form asp-action="RemoverAdmin" asp-route-id="@item.UsuarioId" method="post" style="display:inline">
-                                    <button type="submit" class="btn btn-danger text-decoration-none btn-admin">Remover Admin</button>
+                                    <button type="submit" class="btn btn-lg text-light btn-admin" style="background-color:#52130C">Remover Admin</button>
                                 </form>
                             }
                             else
                             {
                                 <form asp-action="PromoverParaAdmin" asp-route-id="@item.UsuarioId" method="post" style="display:inline">
-                                    <button type="submit" class="btn btn-outline-light text-decoration-none btn-admin">Tornar Admin</button>
+                                    <button type="submit" class="btn btn-lg text-light btn-admin" style="background-color:#52130C">Tornar Admin</button>
                                 </form>
                             }
                         </td>

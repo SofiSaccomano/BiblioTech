@@ -104,7 +104,6 @@ namespace Biblioteca.Controllers
             return View(avaliacao);
         }
 
-
         // GET: Avaliacoes/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -113,13 +112,16 @@ namespace Biblioteca.Controllers
                 return NotFound();
             }
 
-            var avaliacao = await _context.Avaliacoes.FindAsync(id);
+            var avaliacao = await _context.Avaliacoes
+             .Include(a => a.Usuario)
+             .FirstOrDefaultAsync(a => a.AvaliacaoId == id);
+
             if (avaliacao == null)
             {
                 return NotFound();
             }
-            ViewData["LivroId"] = new SelectList(_context.Livros, "LivroId", "LivroId", avaliacao.LivroId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId", avaliacao.UsuarioId);
+            ViewData["LivroId"] = new SelectList(_context.Livros, "LivroId", "Titulo", avaliacao.LivroId);
+            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "NomeCompleto", avaliacao.UsuarioId);
             return View(avaliacao);
         }
 
@@ -128,7 +130,7 @@ namespace Biblioteca.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("AvaliacaoId,Nota,Comentario,DataAvaliacao,LivroId,UsuarioId")] Avaliacao avaliacao)
+        public async Task<IActionResult> Edit(int id, [Bind("AvaliacaoId,Nota,Comentario,DataAvaliacao,LivroId")] Avaliacao avaliacao)
         {
             if (id != avaliacao.AvaliacaoId)
             {
@@ -139,6 +141,14 @@ namespace Biblioteca.Controllers
             {
                 try
                 {
+                    // Recupera a avaliação original do banco
+                    var original = await _context.Avaliacoes.AsNoTracking().FirstOrDefaultAsync(a => a.AvaliacaoId == id);
+                    if (original == null)
+                        return NotFound();
+
+                    avaliacao.UsuarioId = original.UsuarioId; // Garante que o usuário não muda
+                    avaliacao.DataAvaliacao = original.DataAvaliacao; // Garante que a data não muda
+
                     _context.Update(avaliacao);
                     await _context.SaveChangesAsync();
                 }
@@ -155,8 +165,7 @@ namespace Biblioteca.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LivroId"] = new SelectList(_context.Livros, "LivroId", "LivroId", avaliacao.LivroId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId", avaliacao.UsuarioId);
+            ViewData["LivroId"] = new SelectList(_context.Livros, "LivroId", "Titulo", avaliacao.LivroId);
             return View(avaliacao);
         }
 

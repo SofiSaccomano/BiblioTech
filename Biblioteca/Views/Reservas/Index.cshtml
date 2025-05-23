@@ -44,7 +44,6 @@
                     <th>@Html.DisplayNameFor(model => model.DataReserva)</th>
                     <th>@Html.DisplayNameFor(model => model.LivroRetirado)</th>
                     <th></th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -60,21 +59,20 @@
                                 <a asp-controller="Avaliacoes"
                                    asp-action="Create"
                                    asp-route-livroId="@item.LivroId"
-                                   class="btn btn-lg text-light w-100"
-                                   style="background-color:#52130C">
+                                   class="btn btn-lg text-light w-75"
+                                   style="padding: 0.375rem 0.75rem; background-color:#52130C">
                                     Avaliar Livro
                                 </a>
                             }
-                        </td>
-                        <td>
+
                             @if (!item.Cancelada && !item.LivroRetirado)
                             {
                                 <form asp-action="Cancelar" asp-controller="Reservas" method="post" style="display:inline;">
                                     <input type="hidden" name="id" value="@item.ReservaId" />
                                     @Html.AntiForgeryToken()
                                     <button type="submit"
-                                            class="btn btn-lg text-light w-100"
-                                            style="background-color:#52130C;">
+                                            class="btn btn-lg text-light w-75"
+                                            style="padding: 0.375rem 0.75rem; background-color:#52130C">
                                         Cancelar
                                     </button>
                                 </form>
