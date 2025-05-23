@@ -4,19 +4,25 @@
     ViewData["Title"] = "Create";
 }
 
-<h1>Create</h1>
+<h1 style="color:aliceblue">Avaliação</h1>
 
-<h4>Avaliacao</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
                 <label asp-for="Nota" class="control-label"></label>
-                <input asp-for="Nota" class="form-control" />
+                <div class="rating">
+                    @for (int i = 5; i >= 1; i--)
+                    {
+                        <input type="radio" id="star-@i" name="Nota" value="@i" @(Model.Nota == i ? "checked" : "") />
+                        <label for="star-@i">&#9733;</label>
+                    }
+                </div>
                 <span asp-validation-for="Nota" class="text-danger"></span>
             </div>
+
+
             <div class="form-group">
                 <label asp-for="Comentario" class="control-label"></label>
                 <input asp-for="Comentario" class="form-control" />
@@ -24,17 +30,19 @@
             </div>
             <div class="form-group">
                 <label asp-for="DataAvaliacao" class="control-label"></label>
-                <input asp-for="DataAvaliacao" class="form-control" />
+                <input asp-for="DataAvaliacao" class="form-control" readonly value="@(Model.DataAvaliacao == default ? DateTime.Now.ToString("yyyy-MM-dd HH:mm") : Model.DataAvaliacao.ToString("yyyy-MM-dd HH:mm"))" />
                 <span asp-validation-for="DataAvaliacao" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <label asp-for="LivroId" class="control-label"></label>
                 <select asp-for="LivroId" class="form-control" asp-items="ViewBag.LivroId"></select>
             </div>
             <div class="form-group">
-                <label asp-for="UsuarioId" class="control-label"></label>
-                <select asp-for="UsuarioId" class="form-control" asp-items="ViewBag.UsuarioId"></select>
+                <label>Usuário</label>
+                <input class="form-control" value="@ViewBag.NomeCompleto" readonly />
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

@@ -244,3 +244,26 @@ header {
     height: 51px !important;
     max-height: 51px !important;
 }
+
+.rating {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+    display: inline-flex;
+}
+
+    .rating input[type="radio"] {
+        display: none;
+    }
+
+    .rating label {
+        color: #ccc;
+        font-size: 2em;
+        cursor: pointer;
+        transition: color 0.2s;
+    }
+
+        .rating input[type="radio"]:checked ~ label,
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: gold;
+        }

@@ -291,5 +291,44 @@ namespace Biblioteca.Controllers
 
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Create([Bind("UsuarioId,NomeCompleto,CPF,Celular,DataNascimento,UrlFoto")] Usuario usuario, string username, string senha)
+        {
+            if (ModelState.IsValid)
+            {
+                // Monta o e-mail padrão
+                var email = $"{username}@aluno.com";
+
+                // Cria o IdentityUser
+                var identityUser = new IdentityUser { UserName = email, Email = email };
+                var result = await _userManager.CreateAsync(identityUser, senha);
+
+                if (result.Succeeded)
+                {
+                    // Adiciona à role "Aluno"
+                    await _userManager.AddToRoleAsync(identityUser, "Aluno");
+
+                    // Relaciona IdentityUser ao Usuario
+                    usuario.AppUserId = Guid.Parse(identityUser.Id);
+                    usuario.IdentityUser = identityUser;
+
+                    _context.Add(usuario);
+                    await _context.SaveChangesAsync();
+
+                    return RedirectToAction("Index", "Home");
+                }
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+                }
+            }
+            return View(usuario);
+        }
+
     }
 }

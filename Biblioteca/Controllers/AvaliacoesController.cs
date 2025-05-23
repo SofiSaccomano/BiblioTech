@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Biblioteca.Data;
 using Biblioteca.Models;
+using System.Security.Claims;
 
 namespace Biblioteca.Controllers
 {
@@ -22,9 +23,15 @@ namespace Biblioteca.Controllers
         // GET: Avaliacoes
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Avaliacoes.Include(a => a.Livro).Include(a => a.Usuario);
-            return View(await applicationDbContext.ToListAsync());
+            var avaliacoes = _context.Avaliacoes
+                .Include(a => a.Livro)
+                .Include(a => a.Usuario)
+                    .ThenInclude(u => u.IdentityUser); // Inclui o IdentityUser do Usuario
+
+            return View(await avaliacoes.ToListAsync());
         }
+
+
 
         // GET: Avaliacoes/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -47,11 +54,27 @@ namespace Biblioteca.Controllers
         }
 
         // GET: Avaliacoes/Create
-        public IActionResult Create()
+        public IActionResult Create(int? livroId)
         {
-            ViewData["LivroId"] = new SelectList(_context.Livros, "LivroId", "LivroId");
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId");
-            return View();
+            // Obtém o ID do usuário logado
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.AppUserId.ToString() == userId);
+
+            if (usuario == null)
+                return Unauthorized();
+
+            var avaliacao = new Avaliacao
+            {
+                UsuarioId = usuario.UsuarioId
+            };
+
+            if (livroId.HasValue)
+                avaliacao.LivroId = livroId.Value;
+
+            ViewData["LivroId"] = new SelectList(_context.Livros, "LivroId", "Titulo", livroId);
+            ViewBag.NomeCompleto = usuario.NomeCompleto;
+
+            return View(avaliacao);
         }
 
         // POST: Avaliacoes/Create
@@ -59,18 +82,28 @@ namespace Biblioteca.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AvaliacaoId,Nota,Comentario,DataAvaliacao,LivroId,UsuarioId")] Avaliacao avaliacao)
+        public async Task<IActionResult> Create([Bind("AvaliacaoId,Nota,Comentario,LivroId")] Avaliacao avaliacao)
         {
+            // Sempre pega o usuário logado
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.AppUserId.ToString() == userId);
+
+            if (usuario == null)
+                return Unauthorized();
+
+            avaliacao.UsuarioId = usuario.UsuarioId;
+            avaliacao.DataAvaliacao = DateTime.Now;
+
             if (ModelState.IsValid)
             {
                 _context.Add(avaliacao);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["LivroId"] = new SelectList(_context.Livros, "LivroId", "LivroId", avaliacao.LivroId);
-            ViewData["UsuarioId"] = new SelectList(_context.Usuarios, "UsuarioId", "UsuarioId", avaliacao.UsuarioId);
+            ViewData["LivroId"] = new SelectList(_context.Livros, "LivroId", "Titulo", avaliacao.LivroId);
             return View(avaliacao);
         }
+
 
         // GET: Avaliacoes/Edit/5
         public async Task<IActionResult> Edit(int? id)

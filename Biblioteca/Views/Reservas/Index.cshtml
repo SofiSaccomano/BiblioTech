@@ -43,24 +43,34 @@
                         <td>@item.Livro?.Titulo</td>
                         <td>@item.DataReserva.ToString("dd/MM/yyyy")</td>
                         <td>@(item.LivroRetirado ? "Sim" : "Não")</td>
-                        <td></td>
+                        <td>
+                            @if (item.LivroRetirado && !item.Cancelada)
+                            {
+                                <a asp-controller="Avaliacoes"
+                                   asp-action="Create"
+                                   asp-route-livroId="@item.LivroId"
+                                   asp-route-usuarioId="@item.UsuarioId"
+                                   class="btn btn-lg text-light"
+                                   style="background-color:#52130C">
+                                    Avaliar Livro
+                                </a>
+                            }
+                        </td>
                         <td>
                             @if (!item.Cancelada && !item.LivroRetirado)
                             {
                                 <form asp-action="Cancelar" asp-controller="Reservas" method="post" style="display:inline;">
                                     <input type="hidden" name="id" value="@item.ReservaId" />
                                     @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-danger p-2 btn-sm w-50">
+                                    <button class="btn btn-lg text-light" style="background-color:#52130C">
                                         Cancelar
                                     </button>
                                 </form>
-
                             }
                         </td>
-
-
                     </tr>
                 }
+
 
             </tbody>
         </table>
