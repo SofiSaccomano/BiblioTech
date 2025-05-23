@@ -1,4 +1,6 @@
 ﻿@model IEnumerable<Biblioteca.Models.Livro>
+@using System.Security.Claims
+
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -35,7 +37,7 @@
                          data-numeroPaginas="@livro.NumeroPaginas"
                          data-isbn="@livro.ISBN10"
                          data-isbn13="@livro.ISBN13"
-                         data-capa="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Action("BuscarCapa", "Livros", new { id = livro.LivroId }))"
+                         data-capa="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Content("~/" + livro.UrlCapa))"
                          data-livroid="@livro.LivroId"
                          data-media="@((ViewBag.MediaAvaliacoes != null && ViewBag.MediaAvaliacoes.ContainsKey(livro.LivroId) ? ((double)ViewBag.MediaAvaliacoes[livro.LivroId]).ToString("0.0") : "0.0"))"
                          data-quantidade="@((ViewBag.QuantidadeAvaliacoes != null && ViewBag.QuantidadeAvaliacoes.ContainsKey(livro.LivroId) ? ViewBag.QuantidadeAvaliacoes[livro.LivroId] : 0))" />
@@ -216,6 +218,44 @@
                     </div>
                 </div>
             }
+
+            @section Scripts {
+            <script>
+                document.addEventListener('DOMContentLoaded', function () {
+                    var modal = new bootstrap.Modal(document.getElementById('livroModal'));
+                    document.querySelectorAll('.livro-capa').forEach(function (img) {
+                        img.addEventListener('click', function () {
+                            document.getElementById('modalCapa').src = img.getAttribute('data-capa');
+                            document.getElementById('modalTitulo').textContent = img.getAttribute('data-titulo');
+                            document.getElementById('modalAutor').textContent = img.getAttribute('data-autor');
+                            document.getElementById('modalGenero').textContent = img.getAttribute('data-genero') || '';
+                            document.getElementById('modalNumeroPaginas').textContent = img.getAttribute('data-numeroPaginas') || '';
+                            document.getElementById('modalEditora').textContent = img.getAttribute('data-editora') || '';
+                            document.getElementById('modalAno').textContent = img.getAttribute('data-ano') || '';
+                            document.getElementById('modalISBN').textContent = img.getAttribute('data-isbn') || '';
+                            document.getElementById('modalISBN13').textContent = img.getAttribute('data-isbn13') || '';
+                            document.getElementById('modalSinopse').textContent = img.getAttribute('data-sinopse') || '';
+                            document.getElementById('modalLivroId').value = img.getAttribute('data-livroid')|| '';
+                            document.getElementById('modalMediaAvaliacoes').textContent = img.getAttribute('data-media');
+                            document.getElementById('modalQuantidadeAvaliacoes').textContent = img.getAttribute('data-quantidade');
+
+                            // Exibe estrelas
+                            let media = parseFloat(img.getAttribute('data-media'));
+                            let estrelasHtml = '';
+                            for (let i = 1; i <= 5; i++) {
+                                estrelasHtml += i <= Math.round(media) ?
+                                    '<span style="color: gold; font-size: 1.2em;">&#9733;</span>' :
+                                    '<span style="color: #444; font-size: 1.2em;">&#9733;</span>';
+                            }
+                            document.getElementById('modalEstrelas').innerHTML = estrelasHtml;
+
+                                        modal.show();
+                                    });
+                                });
+                            });
+            </script>
+            }
+
         }
         else
         {
