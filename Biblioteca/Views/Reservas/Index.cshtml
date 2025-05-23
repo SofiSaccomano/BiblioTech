@@ -33,9 +33,8 @@
                 </form>
 
             </div>
-<<<<<<< HEAD
             @Html.AntiForgeryToken()
-            <table class="table table-dark table-striped mt-3">
+            <table class="table table-striped tabela-reservas mt-3">
                 <thead>
                     <tr>
                         <th>@Html.DisplayNameFor(model => model.Livro.Titulo)</th>
@@ -43,42 +42,6 @@
                         <th>@Html.DisplayNameFor(model => model.LivroRetirado)</th>
                         <th></th>
                         <th></th>
-=======
-        </div>
-        @Html.AntiForgeryToken()
-        <table class="table table-striped tabela-reservas mt-3">
-            <thead>
-                <tr>
-                    <th>@Html.DisplayNameFor(model => model.Livro.Titulo)</th>
-                    <th>@Html.DisplayNameFor(model => model.DataReserva)</th>
-                    <th>@Html.DisplayNameFor(model => model.LivroRetirado)</th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr id="reserva-@item.ReservaId">
-                        <td>@item.Livro?.Titulo</td>
-                        <td>@item.DataReserva.ToString("dd/MM/yyyy")</td>
-                        <td>@(item.LivroRetirado ? "Sim" : "Não")</td>
-                        <td></td>
-                        <td>
-                            @if (!item.Cancelada && !item.LivroRetirado)
-                            {
-                                <form asp-action="Cancelar" asp-controller="Reservas" method="post" style="display:inline;">
-                                    <input type="hidden" name="id" value="@item.ReservaId" />
-                                    @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-light text-light p-2 btn-sm w-50" style="background-color:#52130C">
-                                        Cancelar
-                                    </button>
-                                </form>
-
-                            }
-                        </td>
-
->>>>>>> origin/Kawany
                     </tr>
                 </thead>
                 <tbody>
