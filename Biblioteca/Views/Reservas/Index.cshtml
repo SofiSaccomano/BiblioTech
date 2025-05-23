@@ -34,6 +34,8 @@
 
             </div>
         </div>
+
+
         @Html.AntiForgeryToken()
         <table class="table table-striped tabela-reservas mt-3">
             <thead>
@@ -48,25 +50,36 @@
             <tbody>
                 @foreach (var item in Model)
                 {
-                    <tr id="reserva-@item.ReservaId">
+                    <tr>
                         <td>@item.Livro?.Titulo</td>
                         <td>@item.DataReserva.ToString("dd/MM/yyyy")</td>
                         <td>@(item.LivroRetirado ? "Sim" : "Não")</td>
-                        <td></td>
+                        <td>
+                            @if (item.LivroRetirado && !item.Cancelada)
+                            {
+                                <a asp-controller="Avaliacoes"
+                                   asp-action="Create"
+                                   asp-route-livroId="@item.LivroId"
+                                   class="btn btn-lg text-light w-100"
+                                   style="background-color:#52130C">
+                                    Avaliar Livro
+                                </a>
+                            }
+                        </td>
                         <td>
                             @if (!item.Cancelada && !item.LivroRetirado)
                             {
-                                <form asp-action="Cancelar" asp-controller="Reservas" method="post" style="display:inline;">
+                                <form asp-action="Cancelar" asp-controller="Reservas" method="post" style="display:inline; width:100%;">
                                     <input type="hidden" name="id" value="@item.ReservaId" />
                                     @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-light text-light p-2 btn-sm w-50" style="background-color:#52130C">
+                                    <button type="submit"
+                                            class="btn btn-lg text-light w-100"
+                                            style="background-color:#52130C">
                                         Cancelar
                                     </button>
                                 </form>
-
                             }
                         </td>
-
                     </tr>
                 }
 
