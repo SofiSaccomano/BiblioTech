@@ -106,17 +106,20 @@ namespace Biblioteca.Controllers
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
-            {
                 return NotFound();
-            }
 
             var livro = await _context.Livros
                 .Include(l => l.Genero)
-                .FirstOrDefaultAsync(m => m.LivroId == id);
+                //.Include(l => l.Avaliacoes)
+                .FirstOrDefaultAsync(l => l.LivroId == id);
+
             if (livro == null)
-            {
                 return NotFound();
-            }
+
+            // Cálculo da média e quantidade de avaliações
+            var avaliacoes = await _context.Avaliacoes.Where(a => a.LivroId == id).ToListAsync();
+            ViewBag.MediaAvaliacoes = avaliacoes.Any() ? avaliacoes.Average(a => a.Nota) : 0;
+            ViewBag.QuantidadeAvaliacoes = avaliacoes.Count;
 
             return View(livro);
         }

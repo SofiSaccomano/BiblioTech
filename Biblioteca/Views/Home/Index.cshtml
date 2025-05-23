@@ -36,13 +36,35 @@
                          data-isbn="@livro.ISBN10"
                          data-isbn13="@livro.ISBN13"
                          data-capa="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Action("BuscarCapa", "Livros", new { id = livro.LivroId }))"
-                         data-livroid="@livro.LivroId" />
+                         data-livroid="@livro.LivroId"
+                         data-media="@((ViewBag.MediaAvaliacoes != null && ViewBag.MediaAvaliacoes.ContainsKey(livro.LivroId) ? ((double)ViewBag.MediaAvaliacoes[livro.LivroId]).ToString("0.0") : "0.0"))"
+                         data-quantidade="@((ViewBag.QuantidadeAvaliacoes != null && ViewBag.QuantidadeAvaliacoes.ContainsKey(livro.LivroId) ? ViewBag.QuantidadeAvaliacoes[livro.LivroId] : 0))" />
 
                 </div>
                 <div class="card-body">
                     <h4 class="card-title">@livro.Titulo</h4>
                     <h5 class="lead">@livro.Autor</h5>
                     <p class="mb-1"><span class="badge bg-secondary">@livro.Genero?.Nome</span></p>
+                    <p class="mb-1">
+                        @{
+                            var mediaDict = ViewBag.MediaAvaliacoes as IDictionary<int, double>;
+                            var qtdDict = ViewBag.QuantidadeAvaliacoes as IDictionary<int, int>;
+                            double media = (mediaDict != null && mediaDict.ContainsKey(livro.LivroId)) ? mediaDict[livro.LivroId] : 0.0;
+                            int qtd = (qtdDict != null && qtdDict.ContainsKey(livro.LivroId)) ? qtdDict[livro.LivroId] : 0;
+                        }
+                        @for (int i = 1; i <= 5; i++)
+                        {
+                            if (i <= Math.Round(media))
+                            {
+                                <span style="color: gold; font-size: 1.2em;">&#9733;</span>
+                            }
+                            else
+                            {
+                                <span style="color: #444; font-size: 1.2em;">&#9733;</span>
+                            }
+                        }
+                        <span class="ms-1" style="font-size:0.95em;">(@qtd)</span>
+                    </p>
                     <p class="text-center">
                         <form asp-controller="Reservas" asp-action="Create" method="post" class="d-inline">
                             <input type="hidden" name="LivroId" value="@livro.LivroId" />
@@ -80,6 +102,15 @@
                         <p><strong>Data Publicação:</strong> <span id="modalAno"></span></p>
                         <p><strong>ISBN:</strong> <span id="modalISBN"></span></p>
                         <p><strong>ISBN13:</strong> <span id="modalISBN13"></span></p>
+                        <p>
+                            <strong>Média das Avaliações:</strong>
+                            <span id="modalMediaAvaliacoes"></span>
+                            <span id="modalEstrelas"></span>
+                        </p>
+                        <p>
+                            <strong>Quantidade de Avaliações:</strong>
+                            <span id="modalQuantidadeAvaliacoes"></span>
+                        </p>
 
                     </div>
                 </div>
@@ -113,11 +144,24 @@
                     document.getElementById('modalISBN').textContent = img.getAttribute('data-isbn') || '';
                     document.getElementById('modalISBN13').textContent = img.getAttribute('data-isbn13') || '';
                     document.getElementById('modalSinopse').textContent = img.getAttribute('data-sinopse') || '';
-                    document.getElementById('modalLivroId').value = img.getAttribute('data-livroid');
-                    modal.show();
-                });
-            });
-        });
+                    document.getElementById('modalLivroId').value = img.getAttribute('data-livroid')|| '';
+                    document.getElementById('modalMediaAvaliacoes').textContent = img.getAttribute('data-media');
+                    document.getElementById('modalQuantidadeAvaliacoes').textContent = img.getAttribute('data-quantidade');
+
+                    // Exibe estrelas
+                    let media = parseFloat(img.getAttribute('data-media'));
+                    let estrelasHtml = '';
+                    for (let i = 1; i <= 5; i++) {
+                        estrelasHtml += i <= Math.round(media) ?
+                            '<span style="color: gold; font-size: 1.2em;">&#9733;</span>' :
+                            '<span style="color: #444; font-size: 1.2em;">&#9733;</span>';
+                    }
+                    document.getElementById('modalEstrelas').innerHTML = estrelasHtml;
+
+                                modal.show();
+                            });
+                        });
+                    });
     </script>
 }
 <!-- ... (restante do código) ... -->
@@ -141,6 +185,26 @@
                         <h4 class="card-title">@livro.Titulo</h4>
                         <h5 class="lead">@livro.Autor</h5>
                         <p class="mb-1"><span class="badge bg-secondary">@livro.Genero?.Nome</span></p>
+                        <p class="mb-1">
+                            @{
+                                var mediaDict = ViewBag.MediaAvaliacoes as IDictionary<int, double>;
+                                var qtdDict = ViewBag.QuantidadeAvaliacoes as IDictionary<int, int>;
+                                double media = (mediaDict != null && mediaDict.ContainsKey(livro.LivroId)) ? mediaDict[livro.LivroId] : 0.0;
+                                int qtd = (qtdDict != null && qtdDict.ContainsKey(livro.LivroId)) ? qtdDict[livro.LivroId] : 0;
+                            }
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                if (i <= Math.Round(media))
+                                {
+                                    <span style="color: gold; font-size: 1.2em;">&#9733;</span>
+                                }
+                                else
+                                {
+                                    <span style="color: #444; font-size: 1.2em;">&#9733;</span>
+                                }
+                            }
+                            <span class="ms-1" style="font-size:0.95em;">(@qtd)</span>
+                        </p>
                         <p class="text-center">
                             <form asp-controller="Reservas" asp-action="Create" method="post" class="d-inline">
                                 <input type="hidden" name="LivroId" value="@livro.LivroId" />
