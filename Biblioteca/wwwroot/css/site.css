@@ -24,15 +24,12 @@ body {
 }
 
 .parallax {
-    background-image: url('../img/Design sem nome (70).png');
+    background-image: url(../img/flor.png);
     background-attachment: fixed;
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
 }
-
-
-
 
 header {
     box-shadow: rgba(0,0,0,.3) 0px 5px;
@@ -244,10 +241,34 @@ header {
         padding: 12px;
     }
 
-.card-title {
-    height: 51px !important;
-    max-height: 51px !important;
+.rating {
+    direction: rtl;
+    unicode-bidi: bidi-override;
+    display: inline-flex;
 }
+
+    .rating input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+        width: 2em;
+        height: 2em;
+        margin: 0;
+    }
+
+    .rating label {
+        color: #ccc;
+        font-size: 2em;
+        cursor: pointer;
+        transition: color 0.2s;
+        position: relative;
+        z-index: 1;
+    }
+
+        .rating input[type="radio"]:checked ~ label,
+        .rating label:hover,
+        .rating label:hover ~ label {
+            color: gold;
+        }
 
 #corLetra {
     color: #4B2E2E;
@@ -265,6 +286,29 @@ header {
         margin-top: 0;
     }
 
-/*#corTabela {
+
+
+.tabela-reservas {
+    background-color: #D6BDB5; /* fundo geral da tabela */
+}
+
+    .tabela-reservas thead {
+        background-color: #A9746E;
+        color: white;
+    }
+
+    .tabela-reservas tbody tr:nth-child(even) {
+        background-color: #EADBD7;
+    }
+
+    .tabela-reservas tbody tr:nth-child(odd) {
+        background-color: #F9F3F1;
+    }
+
+    .tabela-reservas td, .tabela-reservas th {
+        border-color: #A9746E;
+    }
+
+.formCreate {
     background-color: #D6BDB5;
-}*/
+}
