@@ -44,7 +44,7 @@
             <tr>
                 <th>Capa</th>
                 <th>
-                    <a class="text-light text-decoration-none" asp-action="Index" asp-route-sortOrder="@ViewData["TituloSortParm"]" asp-route-searchTerm="@Model.SearchTerm">
+                    <a class="text-dark text-decoration-none" asp-action="Index" asp-route-sortOrder="@ViewData["TituloSortParm"]" asp-route-searchTerm="@Model.SearchTerm">
                         Título
                         @if (Model.SortOrder == "titulo_asc")
                         {
@@ -57,7 +57,7 @@
                     </a>
                 </th>
                 <th>
-                    <a class="text-light text-decoration-none" asp-action="Index" asp-route-sortOrder="@ViewData["AutorSortParm"]" asp-route-searchTerm="@Model.SearchTerm">
+                    <a class="text-dark text-decoration-none" asp-action="Index" asp-route-sortOrder="@ViewData["AutorSortParm"]" asp-route-searchTerm="@Model.SearchTerm">
                         Autor
                         @if (Model.SortOrder == "autor_asc")
                         {
@@ -70,7 +70,7 @@
                     </a>
                 </th>
                 <th>
-                    <a class="text-light text-decoration-none" asp-action="Index" asp-route-sortOrder="@ViewData["EditoraSortParm"]" asp-route-searchTerm="@Model.SearchTerm">
+                    <a class="text-dark text-decoration-none" asp-action="Index" asp-route-sortOrder="@ViewData["EditoraSortParm"]" asp-route-searchTerm="@Model.SearchTerm">
                         Editora
                         @if (Model.SortOrder == "editora_asc")
                         {
@@ -83,7 +83,7 @@
                     </a>
                 </th>
                 <th>
-                    <a class="text-light text-decoration-none" asp-action="Index" asp-route-sortOrder="@ViewData["GeneroSortParm"]" asp-route-searchTerm="@Model.SearchTerm">
+                    <a class="text-dark text-decoration-none" asp-action="Index" asp-route-sortOrder="@ViewData["GeneroSortParm"]" asp-route-searchTerm="@Model.SearchTerm">
                         Gênero
                         @if (Model.SortOrder == "genero_asc")
                         {
@@ -104,7 +104,7 @@
                 <nav class="mb-3">
                     <ul class="pagination justify-content-center">
                         <li class="page-item @(Model.PageIndex == 1 ? "disabled" : "")">
-                            <a class="page-link bg-dark text-light border border-light"
+                            <a class="page-link bg-dark text-dark border border-light"
                                asp-action="Index"
                                asp-route-page="@(Model.PageIndex - 1)"
                                asp-route-searchTerm="@Model.SearchTerm"
@@ -115,7 +115,7 @@
                         @for (int i = 1; i <= Model.TotalPages; i++)
                         {
                             <li class="page-item @(i == Model.PageIndex ? "active" : "")">
-                                <a class="page-link bg-dark text-light border border-light @(i == Model.PageIndex ? "fw-bold" : "")"
+                                <a class="page-link bg-dark text-dark border border-light @(i == Model.PageIndex ? "fw-bold" : "")"
                                    asp-action="Index"
                                    asp-route-page="@i"
                                    asp-route-searchTerm="@Model.SearchTerm"
@@ -125,11 +125,12 @@
                             </li>
                         }
                         <li class="page-item @(Model.PageIndex == Model.TotalPages ? "disabled" : "")">
-                            <a class="page-link bg-dark text-light border border-light"
+                            <a class="page-link bg-dark text-dark border border-light"
                                asp-action="Index"
                                asp-route-page="@(Model.PageIndex + 1)"
                                asp-route-searchTerm="@Model.SearchTerm"
                                asp-route-sortOrder="@Model.SortOrder">
+
                                 Próxima
                             </a>
                         </li>
