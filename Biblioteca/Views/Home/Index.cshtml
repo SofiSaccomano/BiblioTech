@@ -22,7 +22,7 @@
         {
             <div class="card text-center mt-2 mb-3" style="width: 16rem;">
                 <div class="w-100 text-center mt-3">
-                    <img src="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Action("BuscarCapa", "Livros", new { id = livro.LivroId }))"
+                    <img src="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Content("~/" + livro.UrlCapa))"
                          class="card-img-top img-fluid livro-capa"
                          alt="Capa do Livro"
                          style="height: 200px; object-fit: cover; cursor:pointer;"
@@ -132,9 +132,10 @@
             {
                 <div class="card text-center mt-2 mb-3" style="width: 16rem;">
                     <div class="w-100 text-center mt-3">
-                        <img src="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Action("BuscarCapa", "Livros", new { id = livro.LivroId }))"
+                        <img src="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Content("~/" + livro.UrlCapa))"
                              class="card-img-top img-fluid"
                              alt="Capa do Livro" style="height: 200px; object-fit: cover;" />
+
                     </div>
                     <div class="card-body">
                         <h4 class="card-title">@livro.Titulo</h4>
