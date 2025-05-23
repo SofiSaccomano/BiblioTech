@@ -4,10 +4,8 @@
     ViewData["Title"] = "Edit";
 }
 
-<h1>Edit</h1>
+<h1>Editar avaliação</h1>
 
-<h4>Avaliacao</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Edit">
@@ -32,7 +30,7 @@
             </div>
             <div class="form-group">
                 <label asp-for="DataAvaliacao" class="control-label"></label>
-                <input asp-for="DataAvaliacao" class="form-control" />
+                <input asp-for="DataAvaliacao" class="form-control" readonly />
                 <span asp-validation-for="DataAvaliacao" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -41,10 +39,10 @@
                 <span asp-validation-for="LivroId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="UsuarioId" class="control-label"></label>
-                <select asp-for="UsuarioId" class="form-control" asp-items="ViewBag.UsuarioId"></select>
-                <span asp-validation-for="UsuarioId" class="text-danger"></span>
+                <label>Usuário</label>
+                <input class="form-control" value="@Model.Usuario?.NomeCompleto" readonly />
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
