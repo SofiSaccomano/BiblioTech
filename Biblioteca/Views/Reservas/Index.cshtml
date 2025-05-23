@@ -17,6 +17,7 @@
         <div class="row align-items-start gap-3 mb-4">
             <!-- Botão Adicionar -->
             <div class="col-auto d-flex align-items-stretch">
+<<<<<<< HEAD
                 <a asp-action="Create" class="btn btn-outline-light px-4 d-flex align-items-center" style="height: 54px; background-color:#52130C;">
                     <i class="bi bi-plus-circle"></i> Adicionar
                 </a>
@@ -29,11 +30,26 @@
                         <input type="text" name="searchTerm" value="@Context.Request.Query["searchTerm"]" class="form-control" placeholder="Buscar reserva..." />
                         <button type="submit" class="btn btn-outline-light" style="background-color:#52130C">
                             <i class="bi bi-search"></i> Buscar
+=======
+                <a asp-action="Create" class="btn btn-dark px-4 d-flex align-items-center" style="height: 54px;">
+                    <i class="bi bi-plus-circle"></i> Adicionar
+                </a>
+            </div>
+
+
+            <div id="divLocalizarReserva" class="mb-4">
+                <form asp-action="Index" method="get" class="mb-3">
+                    <div class="input-group">
+                        <input type="text" name="searchTerm" class="form-control" placeholder="Localizar reserva..." value="@searchTerm" />
+                        <button type="submit" class="btn btn-outline-light text-light" style="background-color:#52130C">
+                            <i class="bi bi-search"></i> Localizar
+>>>>>>> origin/Sofia
                         </button>
                     </div>
                 </form>
 
             </div>
+<<<<<<< HEAD
 =======
 
         <div id="divLocalizarReserva" class="mb-4">
@@ -79,6 +95,8 @@
 
                             }
                         </td>
+=======
+>>>>>>> origin/Sofia
 
                     </tr>
                 }
