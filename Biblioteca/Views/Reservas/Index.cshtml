@@ -44,7 +44,6 @@
                     <th>@Html.DisplayNameFor(model => model.DataReserva)</th>
                     <th>@Html.DisplayNameFor(model => model.LivroRetirado)</th>
                     <th></th>
-                    <th></th>
                 </tr>
             </thead>
             <tbody>
@@ -65,8 +64,7 @@
                                     Avaliar Livro
                                 </a>
                             }
-                        </td>
-                        <td>
+
                             @if (!item.Cancelada && !item.LivroRetirado)
                             {
                                 <form asp-action="Cancelar" asp-controller="Reservas" method="post" style="display:inline;">
