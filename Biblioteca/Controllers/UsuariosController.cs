@@ -152,7 +152,7 @@ namespace Biblioteca.Controllers
 
                 var identityUser = await _context.Users.FindAsync(userId);
 
-                if (result.Succeeded)
+                if (identityUser != null)
                 {
                     await _userManager.AddToRoleAsync(identityUser, "Aluno");
                     usuario.AppUserId = Guid.Parse(identityUser.Id);
@@ -184,11 +184,9 @@ namespace Biblioteca.Controllers
                 }
                 else
                 {
-                    foreach (var error in result.Errors)
-                    {
-                        ModelState.AddModelError("", error.Description);
-                    }
+                    ModelState.AddModelError("AppUserId", "Usuário não encontrado.");
                 }
+
             }
             return View(usuario);
         }

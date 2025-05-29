@@ -3,8 +3,12 @@
 
 @{
     ViewData["Title"] = "Home Page";
+    var mediaDict = ViewBag.MediaAvaliacoes as IDictionary<int, double>;
+    var qtdDict = ViewBag.QuantidadeAvaliacoes as IDictionary<int, int>;
+    var livrosMaisReservados = ViewBag.LivrosMaisReservados as IEnumerable<Biblioteca.Models.Livro>;
 }
 
+<!-- Barra de pesquisa -->
 <div id="divPesquisa" class="pt-4 pb-4 text-black" style="background-color: #EFE6DD;">
     <p class="fs-4 text-center">Encontre seu livro, pelo nome, autor ou editora.</p>
     <form asp-controller="Livros" asp-action="Search" method="get" class="input-group form-busca">
@@ -15,16 +19,18 @@
     </form>
 </div>
 
-
-<!-- ... (código existente acima) ... -->
-
+<!-- Lista de lançamentos -->
 <div id="divLancamentos">
     <div class="parallax pt-4 d-flex justify-content-evenly flex-wrap">
         @foreach (var livro in Model)
         {
+            double media = mediaDict?.ContainsKey(livro.LivroId) == true ? mediaDict[livro.LivroId] : 0.0;
+            int qtd = qtdDict?.ContainsKey(livro.LivroId) == true ? qtdDict[livro.LivroId] : 0;
+            var urlCapa = string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Content("~/" + livro.UrlCapa);
+
             <div class="card text-center mt-2 mb-3" style="width: 16rem;">
                 <div class="w-100 text-center mt-3">
-                    <img src="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Content("~/" + livro.UrlCapa))"
+                    <img src="@urlCapa"
                          class="card-img-top img-fluid livro-capa"
                          alt="Capa do Livro"
                          style="height: 200px; object-fit: cover; cursor:pointer;"
@@ -37,51 +43,33 @@
                          data-numeroPaginas="@livro.NumeroPaginas"
                          data-isbn="@livro.ISBN10"
                          data-isbn13="@livro.ISBN13"
-                         data-capa="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Content("~/" + livro.UrlCapa))"
+                         data-capa="@urlCapa"
                          data-livroid="@livro.LivroId"
-                         data-media="@((ViewBag.MediaAvaliacoes != null && ViewBag.MediaAvaliacoes.ContainsKey(livro.LivroId) ? ((double)ViewBag.MediaAvaliacoes[livro.LivroId]).ToString("0.0") : "0.0"))"
-                         data-quantidade="@((ViewBag.QuantidadeAvaliacoes != null && ViewBag.QuantidadeAvaliacoes.ContainsKey(livro.LivroId) ? ViewBag.QuantidadeAvaliacoes[livro.LivroId] : 0))" />
-
+                         data-media="@media.ToString("0.0")"
+                         data-quantidade="@qtd" />
                 </div>
                 <div class="card-body">
                     <h4 class="card-title">@livro.Titulo</h4>
                     <h5 class="lead">@livro.Autor</h5>
                     <p class="mb-1"><span class="badge bg-secondary">@livro.Genero?.Nome</span></p>
                     <p class="mb-1">
-                        @{
-                            var mediaDict = ViewBag.MediaAvaliacoes as IDictionary<int, double>;
-                            var qtdDict = ViewBag.QuantidadeAvaliacoes as IDictionary<int, int>;
-                            double media = (mediaDict != null && mediaDict.ContainsKey(livro.LivroId)) ? mediaDict[livro.LivroId] : 0.0;
-                            int qtd = (qtdDict != null && qtdDict.ContainsKey(livro.LivroId)) ? qtdDict[livro.LivroId] : 0;
-                        }
                         @for (int i = 1; i <= 5; i++)
                         {
-                            if (i <= Math.Round(media))
-                            {
-                                <span style="color: gold; font-size: 1.2em;">&#9733;</span>
-                            }
-                            else
-                            {
-                                <span style="color: #444; font-size: 1.2em;">&#9733;</span>
-                            }
+                            <span style="color:@(i <= Math.Round(media) ? "gold" : "#444"); font-size: 1.2em;">&#9733;</span>
                         }
                         <span class="ms-1" style="font-size:0.95em;">(@qtd)</span>
                     </p>
-                    <p class="text-center">
-                        <form asp-controller="Reservas" asp-action="Create" method="post" class="d-inline">
-                            <input type="hidden" name="LivroId" value="@livro.LivroId" />
-                            <button type="submit" class="btn btn-light text-light p-1 m-0 align-baseline" style="background-color:#52130C">
-                                Reservar
-                            </button>
-                        </form>
-                    </p>
+                    <form asp-controller="Reservas" asp-action="Create" method="post">
+                        <input type="hidden" name="LivroId" value="@livro.LivroId" />
+                        <button type="submit" class="btn btn-light text-light" style="background-color:#52130C">Reservar</button>
+                    </form>
                 </div>
             </div>
         }
     </div>
 </div>
 
-<!-- Modal Bootstrap -->
+<!-- Modal Detalhes do Livro -->
 <div class="modal fade" id="livroModal" tabindex="-1" aria-labelledby="livroModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
@@ -104,30 +92,67 @@
                         <p><strong>Data Publicação:</strong> <span id="modalAno"></span></p>
                         <p><strong>ISBN:</strong> <span id="modalISBN"></span></p>
                         <p><strong>ISBN13:</strong> <span id="modalISBN13"></span></p>
-                        <p>
-                            <strong>Média das Avaliações:</strong>
-                            <span id="modalMediaAvaliacoes"></span>
-                            <span id="modalEstrelas"></span>
-                        </p>
-                        <p>
-                            <strong>Quantidade de Avaliações:</strong>
-                            <span id="modalQuantidadeAvaliacoes"></span>
-                        </p>
-
+                        <p><strong>Média das Avaliações:</strong> <span id="modalMediaAvaliacoes"></span> <span id="modalEstrelas"></span></p>
+                        <p><strong>Quantidade de Avaliações:</strong> <span id="modalQuantidadeAvaliacoes"></span></p>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <form id="modalReservaForm" asp-controller="Reservas" asp-action="Create" method="post" class="d-inline">
-                    <input type="hidden" name="LivroId" id="modalLivroId" value="" />
-                    <button type="submit" class="btn btn-light text-light" style="background-color:#52130C">
-                        Reservar
-                    </button>
+                <form id="modalReservaForm" asp-controller="Reservas" asp-action="Create" method="post">
+                    <input type="hidden" name="LivroId" id="modalLivroId" />
+                    <button type="submit" class="btn btn-light text-light" style="background-color:#52130C">Reservar</button>
                 </form>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
             </div>
         </div>
     </div>
+</div>
+
+<!-- Top 5 Livros -->
+<div class="m-0 p-0">
+    <h2 class="text-center m-0 pt-4" style="background-color: #EFE6DD; color: #600000">TOP 5 - Livros Mais Reservados</h2>
+    <div id="divTop5" class="pt-4 d-flex justify-content-evenly flex-wrap" style="background-color: #EFE6DD;">
+        @if (livrosMaisReservados != null && livrosMaisReservados.Any())
+        {
+            foreach (var livro in livrosMaisReservados)
+            {
+                double media = mediaDict?.ContainsKey(livro.LivroId) == true ? mediaDict[livro.LivroId] : 0.0;
+                int qtd = qtdDict?.ContainsKey(livro.LivroId) == true ? qtdDict[livro.LivroId] : 0;
+                var urlCapa = string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Content("~/" + livro.UrlCapa);
+
+                <div class="card text-center mt-2 mb-3" style="width: 16rem;">
+                    <div class="w-100 text-center mt-3">
+                        <img src="@urlCapa" class="card-img-top img-fluid" alt="Capa do Livro" style="height: 200px; object-fit: cover;" />
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">@livro.Titulo</h4>
+                        <h5 class="lead">@livro.Autor</h5>
+                        <p class="mb-1"><span class="badge bg-secondary">@livro.Genero?.Nome</span></p>
+                        <p class="mb-1">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <span style="color:@(i <= Math.Round(media) ? "gold" : "#444"); font-size: 1.2em;">&#9733;</span>
+                            }
+                            <span class="ms-1" style="font-size:0.95em;">(@qtd)</span>
+                        </p>
+                        <form asp-controller="Reservas" asp-action="Create" method="post">
+                            <input type="hidden" name="LivroId" value="@livro.LivroId" />
+                            <button type="submit" class="btn btn-light text-light" style="background-color:#52130C">Reservar</button>
+                        </form>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <span class="text-dark">Nenhum livro reservado ainda.</span>
+        }
+    </div>
+</div>
+
+<!-- Footer -->
+<div id="divFooter" class="text-center p-3" style="background-color: #E6DCD3;">
+    <p class="lead pt-3" style="color:#600000">Desenvolvido com 🤍 por Mulieres</p>
 </div>
 
 @section Scripts {
@@ -146,7 +171,7 @@
                     document.getElementById('modalISBN').textContent = img.getAttribute('data-isbn') || '';
                     document.getElementById('modalISBN13').textContent = img.getAttribute('data-isbn13') || '';
                     document.getElementById('modalSinopse').textContent = img.getAttribute('data-sinopse') || '';
-                    document.getElementById('modalLivroId').value = img.getAttribute('data-livroid')|| '';
+                    document.getElementById('modalLivroId').value = img.getAttribute('data-livroid') || '';
                     document.getElementById('modalMediaAvaliacoes').textContent = img.getAttribute('data-media');
                     document.getElementById('modalQuantidadeAvaliacoes').textContent = img.getAttribute('data-quantidade');
 
@@ -154,184 +179,15 @@
                     let media = parseFloat(img.getAttribute('data-media'));
                     let estrelasHtml = '';
                     for (let i = 1; i <= 5; i++) {
-                        estrelasHtml += i <= Math.round(media) ?
-                            '<span style="color: gold; font-size: 1.2em;">&#9733;</span>' :
-                            '<span style="color: #444; font-size: 1.2em;">&#9733;</span>';
+                        estrelasHtml += i <= Math.round(media)
+                            ? '<span style="color: gold; font-size: 1.2em;">&#9733;</span>'
+                            : '<span style="color: #444; font-size: 1.2em;">&#9733;</span>';
                     }
                     document.getElementById('modalEstrelas').innerHTML = estrelasHtml;
 
-                                modal.show();
-                            });
-                        });
-                    });
+                    modal.show();
+                });
+            });
+        });
     </script>
 }
-<!-- ... (restante do código) ... -->
-
-
-<div class="m-0 p-0">
-    <h2 class="text-center  m-0 pt-4" style="background-color: #EFE6DD; color: #600000">TOP 5 - Livros Mais Reservados</h2>
-    <div id="divTop5" class=" m-0 pt-4 d-flex justify-content-evenly flex-wrap" style="background-color: #EFE6DD;">
-        @if (ViewBag.LivrosMaisReservados != null)
-        {
-            foreach (var livro in (IEnumerable<Biblioteca.Models.Livro>)ViewBag.LivrosMaisReservados)
-            {
-                <div class="card text-center mt-2 mb-3" style="width: 16rem;">
-                    <div class="w-100 text-center mt-3">
-                        <img src="@(string.IsNullOrEmpty(livro.UrlCapa) ? Url.Content("~/img/sem-imagem.jpg") : Url.Content("~/" + livro.UrlCapa))"
-                             class="card-img-top img-fluid"
-                             alt="Capa do Livro" style="height: 200px; object-fit: cover;" />
-
-                    </div>
-                    <div class="card-body">
-                        <h4 class="card-title">@livro.Titulo</h4>
-                        <h5 class="lead">@livro.Autor</h5>
-                        <p class="mb-1"><span class="badge bg-secondary">@livro.Genero?.Nome</span></p>
-                        <p class="mb-1">
-                            @{
-                                var mediaDict = ViewBag.MediaAvaliacoes as IDictionary<int, double>;
-                                var qtdDict = ViewBag.QuantidadeAvaliacoes as IDictionary<int, int>;
-                                double media = (mediaDict != null && mediaDict.ContainsKey(livro.LivroId)) ? mediaDict[livro.LivroId] : 0.0;
-                                int qtd = (qtdDict != null && qtdDict.ContainsKey(livro.LivroId)) ? qtdDict[livro.LivroId] : 0;
-                            }
-                            @for (int i = 1; i <= 5; i++)
-                            {
-                                if (i <= Math.Round(media))
-                                {
-                                    <span style="color: gold; font-size: 1.2em;">&#9733;</span>
-                                }
-                                else
-                                {
-                                    <span style="color: #444; font-size: 1.2em;">&#9733;</span>
-                                }
-                            }
-                            <span class="ms-1" style="font-size:0.95em;">(@qtd)</span>
-                        </p>
-                        <p class="text-center">
-                            <form asp-controller="Reservas" asp-action="Create" method="post" class="d-inline">
-                                <input type="hidden" name="LivroId" value="@livro.LivroId" />
-                                <button type="submit" class="btn btn-light text-light p-1 m-0 align-baseline" style="background-color:#52130C">
-                                    Reservar
-                                </button>
-                            </form>
-                        </p>
-                    </div>
-                </div>
-            }
-
-            @section Scripts {
-            <script>
-                document.addEventListener('DOMContentLoaded', function () {
-                    var modal = new bootstrap.Modal(document.getElementById('livroModal'));
-                    document.querySelectorAll('.livro-capa').forEach(function (img) {
-                        img.addEventListener('click', function () {
-                            document.getElementById('modalCapa').src = img.getAttribute('data-capa');
-                            document.getElementById('modalTitulo').textContent = img.getAttribute('data-titulo');
-                            document.getElementById('modalAutor').textContent = img.getAttribute('data-autor');
-                            document.getElementById('modalGenero').textContent = img.getAttribute('data-genero') || '';
-                            document.getElementById('modalNumeroPaginas').textContent = img.getAttribute('data-numeroPaginas') || '';
-                            document.getElementById('modalEditora').textContent = img.getAttribute('data-editora') || '';
-                            document.getElementById('modalAno').textContent = img.getAttribute('data-ano') || '';
-                            document.getElementById('modalISBN').textContent = img.getAttribute('data-isbn') || '';
-                            document.getElementById('modalISBN13').textContent = img.getAttribute('data-isbn13') || '';
-                            document.getElementById('modalSinopse').textContent = img.getAttribute('data-sinopse') || '';
-                            document.getElementById('modalLivroId').value = img.getAttribute('data-livroid')|| '';
-                            document.getElementById('modalMediaAvaliacoes').textContent = img.getAttribute('data-media');
-                            document.getElementById('modalQuantidadeAvaliacoes').textContent = img.getAttribute('data-quantidade');
-
-                            // Exibe estrelas
-                            let media = parseFloat(img.getAttribute('data-media'));
-                            let estrelasHtml = '';
-                            for (let i = 1; i <= 5; i++) {
-                                estrelasHtml += i <= Math.round(media) ?
-                                    '<span style="color: gold; font-size: 1.2em;">&#9733;</span>' :
-                                    '<span style="color: #444; font-size: 1.2em;">&#9733;</span>';
-                            }
-                            document.getElementById('modalEstrelas').innerHTML = estrelasHtml;
-
-                                        modal.show();
-                                    });
-                                });
-                            });
-            </script>
-            }
-
-        }
-        else
-        {
-            <span class="text-light">Nenhum livro reservado ainda.</span>
-        }
-    </div>
-</div>
-
-
-<!--
-<div id="divAvalicao">
-
-    <div class="parallax pt-4 pb-5 ">
-        <h2 class="text-center text-black bg-transparent m-0 pt-2 text-shadow-white">Livros com Melhores Avaliações</h2>
-
-        <div class="pt-3 d-flex justify-content-evenly">
-            <div class="card text-center mt-2">
-                <div class="w-100 text-center mt-3">
-                    <img src="~/img/livro.png" class="card-img-top img-fluid" alt="Capa do Livro">
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title">A Fazenda SFantasma</h4>
-                    <h5 class="lead">Gustavo F. Francelin</h5>
-                    <p>Avaliações</p>
-                    <p class="text-center">
-                        <a href="#" class="card-link btn btn-dark">Reservar</a>
-                    </p>
-                </div>
-            </div>
-
-            <div class="card text-center mt-2">
-                <div class="w-100 text-center mt-3">
-                    <img src="~/img/livro.png" class="card-img-top img-fluid" alt="Capa do Livro">
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title">A Fazenda SFantasma</h4>
-                    <h5 class="lead">Gustavo F. Francelin</h5>
-                    <p>Avaliações</p>
-                    <p class="text-center">
-                        <a href="#" class="card-link btn btn-dark">Reservar</a>
-                    </p>
-                </div>
-            </div>
-
-            <div class="card text-center mt-2">
-                <div class="w-100 text-center mt-3">
-                    <img src="~/img/livro.png" class="card-img-top img-fluid" alt="Capa do Livro">
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title">A Fazenda SFantasma</h4>
-                    <h5 class="lead">Gustavo F. Francelin</h5>
-                    <p>Avaliações</p>
-                    <p class="text-center">
-                        <a href="#" class="card-link btn btn-dark">Reservar</a>
-                    </p>
-                </div>
-            </div>
-
-            <div class="card text-center mt-2">
-                <div class="w-100 text-center mt-3">
-                    <img src="~/img/livro.png" class="card-img-top img-fluid" alt="Capa do Livro">
-                </div>
-                <div class="card-body">
-                    <h4 class="card-title">A Fazenda SFantasma</h4>
-                    <h5 class="lead">Gustavo F. Francelin</h5>
-                    <p>Avaliações</p>
-                    <p class="text-center">
-                        <a href="#" class="card-link btn btn-dark">Reservar</a>
-                    </p>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
--->
-
-<div id="divFooter" class="text-center p-3" style="background-color: #E6DCD3 ">
-    <p class="lead pt-3" style="color:#600000">Desenvolvido com 🤍 por Mulieres</p>
-</div>
