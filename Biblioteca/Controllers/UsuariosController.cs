@@ -156,6 +156,7 @@ namespace Biblioteca.Controllers
                 else
                 {
                     ModelState.AddModelError("AppUserId", "Usuário não encontrado.");
+<<<<<<< HEAD
                     return View(usuario);
                 }
 
@@ -189,6 +190,10 @@ namespace Biblioteca.Controllers
                 }
 
                 return RedirectToAction("Index", "Home");
+=======
+                }
+
+>>>>>>> origin/Sofia
             }
             return View(usuario);
         }
