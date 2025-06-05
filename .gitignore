@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /Biblioteca/appsettings.json
 /Biblioteca/Controllers/AvaliacoesController.cs
 /Biblioteca/Views/Livros/Index.cshtml
+/Biblioteca/Views/Generos/Index.cshtml
