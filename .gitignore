@@ -366,3 +366,6 @@ FodyWeavers.xsd
 /Biblioteca/Controllers/AvaliacoesController.cs
 /Biblioteca/Views/Livros/Index.cshtml
 /Biblioteca/Views/Generos/Index.cshtml
+/Biblioteca/Views/Avaliacoes/Index.cshtml
+/Biblioteca/Views/Avaliacoes/Create.cshtml
+/Biblioteca/Controllers/UsuariosController.cs
